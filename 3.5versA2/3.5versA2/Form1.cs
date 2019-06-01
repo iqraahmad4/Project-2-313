@@ -1,0 +1,346 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using A2;
+
+
+
+
+namespace A2
+{
+    public partial class Form1 : Form
+    {                                              //\/\/\// Global //\/\/\/\//
+        double userTemp;                          //***desired temperature***\\
+        double[] coefficentArray = { 0, 0, 0, 0, 0 };
+        double volt0Weighted = 0;
+        double volt1Weighted = 0;
+        double volt2Weighted = 0;
+        //***Boolean for button pressed on/off***\\
+        bool On;
+        bool sensor0;
+        bool sensor1;
+        bool sensor2;
+        DigitalO dOut = new DigitalO();
+        //***Channels for each thermistor***\\
+        AnalogI aIn0 = new AnalogI();           /**Sensor 0**/
+        AnalogI aIn1 = new AnalogI();           /**Sensor 1**/
+        AnalogI aIn2 = new AnalogI();           /**Sensor 2**/
+       /* double[] sensor0reading = {2.4759902489,
+2.4894283461,
+2.4513378440,
+2.3803205125,
+2.4050207998,
+2.4707879394,
+2.3802162355,
+2.4576021775,
+2.4131076987,
+2.4851280882 };
+        double[] sensor1reading = {2.4672855489,
+2.3995582025,
+2.4754778625,
+2.4871710304,
+2.4320398510,
+2.4940745564,
+2.4174348806,
+2.3957230322,
+2.4371866859,
+2.4726413910 };
+        double[] sensor2reading = { 2.4103011511,
+2.4453512009,
+2.3938112427,
+2.4106018425,
+2.4363999626,
+2.4812473669,
+2.4932008987,
+2.3882043154,
+2.4511106462,
+2.4485548746 };*/
+      
+
+       int count = 0;
+        int timerticks = 0;
+                                                //Specifications for thermistors\\
+        int[] r = { 10000, 100000, 5000 };       //~~Resistance @ 25 degrees~~\\
+        int r0 = 10000;                         /**Sensor 0**/
+        int r1 = 100000;                        /**Sensor 1**/
+        int r2 = 5000;                          /**Sensor 2**/
+        int[] B = { 3380, 4380, 3960 };        //~~B constant~~\\
+        int B0 = 3380;                          /**Sensor 0**/
+        int B1 = 4380;                          /**Sensor 1**/
+        int B2 = 3960;                          /**Sensor 2**/
+
+        double temp;                            //***Current Temperature***\\
+        double roomTemp;                        //***Initial Room temperature***\\
+
+        private void MaintainTemp()
+        {
+            while (On)
+            {
+                temp = (CalcTemp(0, ReadTemperaturet(aIn0)) + CalcTemp(1, ReadTemperaturet(aIn1)) + CalcTemp(2, ReadTemperaturet(aIn2))) / 3;
+               // temp = (CalcTemp(0, ReadTemperaturet(sensor0reading)) + CalcTemp(1, ReadTemperaturet(sensor1reading)) + CalcTemp(2, ReadTemperaturet(sensor2reading))) / 3;
+                if (temp < userTemp - 0.25)
+                {
+                    Console.WriteLine("Heat On");
+                    dOut.WriteData(2);
+                }
+                else if (temp > userTemp + 0.25)
+                {
+                    Console.WriteLine("Heat &  Fan On");
+                    dOut.WriteData(3);
+                }
+                else if (temp > userTemp)
+                {
+                    Console.WriteLine("Heat & Phone Off");
+                    dOut.WriteData(0);
+                    Console.WriteLine("Fan On");
+                    dOut.WriteData(1);
+                }
+            }
+        }
+
+       /* private double ReadTemperature()
+        {
+            double[] volt0 = aIn0.ReadData(); double[] volt1 = aIn1.ReadData(); double[] volt2 = aIn2.ReadData();
+            volt0Weighted = 0; volt1Weighted = 0; volt2Weighted = 0;
+            for (int i = 0; i < 5; i++)
+            {
+                volt0[i] = volt0[i] * coefficentArray[i];
+                volt0Weighted += volt0[i];
+                volt1[i] = volt1[i] * coefficentArray[i];
+                volt1Weighted += volt1[i];
+                volt2[i] = volt2[i] * coefficentArray[i];
+                volt2Weighted += volt2[i]; 
+            }
+            double temp0 = B0 / (Math.Log((volt0Weighted / (5 - volt0Weighted)) / (r0 * Math.Exp(-B0 / 25))));
+            Console.WriteLine(temp0);
+            double temp1 = B1 / (Math.Log((volt1Weighted / (5 - volt1Weighted)) / (r1 * Math.Exp(-B1 / 25))));
+            Console.WriteLine(temp1);
+            double temp2 = B2 / (Math.Log((volt2Weighted / (5 - volt2Weighted)) / (r2 * Math.Exp(-B2 / 25))));
+            Console.WriteLine(temp2);
+            double avgTemp = (temp1 + temp0 + temp2) / 3;
+            Console.WriteLine(avgTemp);
+            return avgTemp;
+        } */
+
+        private double ReadTemperaturet(AnalogI aIn /*double[] sensor*/)
+        {
+            double[] volt = aIn.ReadData();
+           // double[] volt = sensor;
+            double voltWeighted = 0;
+            for (int i = 0; i < 5; i++)
+            {
+                volt[i] = volt[i] * coefficentArray[i];
+                voltWeighted += volt[i];
+            }
+            return voltWeighted;
+        }
+
+        private double CalcTemp(int sensorNumber,  double voltWeighted)
+        {
+            double temp = B[sensorNumber] / (Math.Log((voltWeighted / (5 - voltWeighted)) / (r[sensorNumber] * Math.Exp(-B[sensorNumber] / 25))));
+            Console.WriteLine(temp);
+            return temp;
+        }
+
+
+        public Form1()
+        {
+                                                     // *** Initializing all components and opening each channel once for each thermistor sensor.
+                                                     // Setting 'On' to false inside the  so that system is switched off when it starts.
+            InitializeComponent();
+            aIn0.OpenChannel("0", "Ainport0");       
+            aIn1.OpenChannel("1", "Ainport1");
+            aIn2.OpenChannel("2", "Ainport2");
+            dOut.OpenChannel();
+            On = false;
+            Console.WriteLine("Heat & Phone Off");
+                dOut.WriteData(0);
+            textBox5.Text = "Fan Off"; textBox4.Text = "Heater Off";
+            textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;
+            sensor0 = true;
+            sensor1 = true;
+            sensor2 = true;
+               roomTemp = (CalcTemp(0,ReadTemperaturet(aIn0)) + CalcTemp(1, ReadTemperaturet(aIn1)) + CalcTemp(2, ReadTemperaturet(aIn2))) / 3;
+            //roomTemp = 25;
+            Console.WriteLine("RT: " + roomTemp.ToString());
+        }
+
+                                                    // Turning System on/off. On varriable is toggled between its two settings, true/false. 
+                                                    // True--> turn system on. False--> turn system off.
+                                                    // When true, the system measures the values of the three thermistors at that interval, 
+                                                    // and calculates the average current room temperature using the algorithm 
+                                                    // T = B / (Ln ( (V / (5-V)) / (R * e ^ (-B / 25))).
+                                                    // User input is read and verified if it falls within the right range, 2 - 5 degrees above room temperature.
+                                                    // Heater is turned on and dystem reaches the desired temperature and then continues to maintain within a 0.25 range 
+                                                    // of the desired temperature through turning the heater and fan on and off until the system is switch off.
+                                                    // When false, heater is turned off, fan is turn back on until the temperature read is at room temperature again. 
+                                                    // System then turns fan off and is officially off.
+        private void button1_Click(object sender, EventArgs e)
+        {
+            DigitalO dOut = new DigitalO();
+            dOut.OpenChannel();
+            On = !On;
+
+            if (On)
+            {
+                using (System.IO.StreamReader parameters = new System.IO.StreamReader(@"H:\313 Project version 2\A2-zehra\3.5versA2\Coefficients.txt"))
+                {
+                    int lineCounter = 0;
+                    string line;
+
+                    while((line = parameters.ReadLine()) != null)
+                    {
+                        coefficentArray[lineCounter] = Convert.ToDouble(line);
+                        Console.WriteLine(coefficentArray[lineCounter]);
+                        lineCounter++;
+                    }
+
+                    parameters.Close();
+                    lineCounter = 0;
+
+                }
+    
+            }
+            else
+            {
+                Console.WriteLine("Heat & Phone Off");
+                    dOut.WriteData(0);
+                textBox5.Text = "Fan Off"; textBox4.Text = "Heater Off";
+                textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;
+                while (temp > roomTemp)
+                {
+                    temp = (CalcTemp(0, ReadTemperaturet(aIn0)) + CalcTemp(1, ReadTemperaturet(aIn1)) + CalcTemp(2, ReadTemperaturet(aIn2))) / 3;
+                    //temp = (CalcTemp(0, ReadTemperaturet(sensor0reading)) + CalcTemp(1, ReadTemperaturet(sensor1reading)) + CalcTemp(2, ReadTemperaturet(sensor2reading))) / 3;
+                    Console.WriteLine("Fan On");
+                        dOut.WriteData(1);
+                    textBox5.Text = "Fan On";
+                    textBox5.BackColor = Color.DarkSeaGreen;
+                }
+                Console.WriteLine("Heat & Phone Off");
+                 dOut.WriteData(0);
+                textBox5.Text = "Fan Off"; textBox4.Text = "Heater Off";
+                textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;
+                On = false;
+            }
+        }
+         
+   
+
+                                                                            // Timer ticks every 0.1 seconds, frequency of 10 Hz. At each tick, the voltage data is read.
+                                                                            // Every 5 ticks, or 0.5 seconds, the temperature for each voltage reading from the sensors is calculated
+                                                                            // usung the algorithm written above, for the sensors the user activates, all sensors are on by default
+                                                                            // Sensors whose temperatures were calculated is outputted into the corresponding textbox for that sensor 
+                                                                            // and data is written into the .txt file 'Temperatures'. timerticks is reset to 0 to recount 5 ticks for 0.5 seconds.
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            //here we need to get array of 5 and for each value we apply the coeffiecent the after applying coefficient we average them again to get the single volt measurement
+            Console.WriteLine("timer is working!");
+            volt0Weighted = ReadTemperaturet(aIn0/*sensor0reading*/);
+            volt1Weighted = ReadTemperaturet(/*sensor1reading*/aIn1);
+            volt2Weighted = ReadTemperaturet(/*sensor2reading*/aIn2);
+               Console.WriteLine("volt0 " + volt0Weighted);
+               Console.WriteLine("volt1 " + volt1Weighted);
+               Console.WriteLine("volt2 " + volt2Weighted);
+            if (On)
+            {
+                Console.WriteLine("enter if!");
+                count += 1;
+                timerticks += 1;
+                Console.WriteLine("Timer tick: " + timerticks.ToString());
+                if (timerticks == 5)
+                {
+                    Console.WriteLine("enter if t=5!");
+                    string[] data = { "", "", "" };
+                    if (sensor0)
+                    {
+                       double  temp0 = CalcTemp(0, volt0Weighted);
+                        Console.WriteLine("Sensor0 "+temp0);
+                        textBox1.Text = temp.ToString();
+                        data[0] = temp0.ToString();
+                    }
+                    if (sensor1)
+                    {
+                       double  temp1 = CalcTemp(1, volt1Weighted);
+                        Console.WriteLine("Sensor1 " + temp1);
+                        textBox2.Text = temp.ToString();
+                        data[1] =temp1.ToString();
+                    }
+                    if (sensor2)
+                    {
+                       double temp2 = CalcTemp(2, volt2Weighted);
+                        Console.WriteLine("Sensor2 " + temp2);
+                        textBox3.Text = temp.ToString();
+                        data[2] = temp2.ToString();
+                    }
+                    temp = (Convert.ToDouble(data[0]) + Convert.ToDouble(data[1]) + Convert.ToDouble(data[2])) / 3;
+
+                         /*  using (System.IO.StreamWriter file =
+                     new System.IO.StreamWriter(@"H:\project 2\Assignment\A2\Temperatures.txt", true))
+                    {
+                        file.WriteLine("Data " + count.ToString() + ": ");
+                        file.Write(data);
+                        //file.Write(data[0]); file.Write(data[1]); file.Write(data[2]);
+                    }*/
+                    timerticks = 0;
+                }
+                MaintainTemp();
+            }
+        }
+
+                                                                            // When pressed, the corresponding sensor will toggle from being on or off. 
+                                                                            // This will determine which sensor values will be considered according to 
+                                                                            // the user interface. Sensor variables are defaulted to true and can be 
+                                                                            // changed by pressing the corresponding button.
+        private void button2_Click(object sender, EventArgs e)
+        {
+            sensor0 = !sensor0;
+            if (sensor0)
+            {
+                textBox1.BackColor = Color.Honeydew;
+            }
+            else
+            {
+                textBox1.BackColor = Color.MistyRose;
+                textBox1.Clear();
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            sensor1 = !sensor1;
+            if (sensor1)
+            {
+                textBox2.BackColor = Color.Honeydew;
+            }
+            else
+            {
+                textBox2.BackColor = Color.MistyRose;
+                textBox2.Clear();
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            sensor2 = !sensor2;
+            if (sensor2)
+            {
+                textBox3.BackColor = Color.Honeydew;
+            }
+            else
+            {
+                textBox3.BackColor = Color.MistyRose;
+                textBox3.Clear();
+            }
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            userTemp = Convert.ToDouble(numericUpDown1.Value)+roomTemp;
+        }
+    }
+}

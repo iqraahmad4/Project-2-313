@@ -1,0 +1,91 @@
+H:\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csprojResolveAssemblyReference.cache
+H:\3.5versA2\3.5versA2\obj\x86\Debug\A2.Form1.resources
+H:\3.5versA2\3.5versA2\obj\x86\Debug\_3._5versA2.Properties.Resources.resources
+H:\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csproj.GenerateResource.Cache
+H:\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csproj.CoreCompileInputs.cache
+H:\3.5versA2\3.5versA2\bin\x86\Debug\3.5versA2.exe
+H:\3.5versA2\3.5versA2\bin\x86\Debug\3.5versA2.pdb
+H:\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.Common.dll
+H:\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.Common.Native.dll
+H:\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.DAQmx.dll
+H:\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.Common.xml
+H:\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.DAQmx.xml
+H:\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.exe
+H:\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.pdb
+H:\yesterdays code\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csprojResolveAssemblyReference.cache
+H:\yesterdays code\3.5versA2\3.5versA2\obj\x86\Debug\A2.Form1.resources
+H:\yesterdays code\3.5versA2\3.5versA2\obj\x86\Debug\_3._5versA2.Properties.Resources.resources
+H:\yesterdays code\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csproj.GenerateResource.Cache
+H:\yesterdays code\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csproj.CoreCompileInputs.cache
+H:\yesterdays code\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.exe
+H:\yesterdays code\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.pdb
+H:\yesterdays code\3.5versA2\3.5versA2\bin\x86\Debug\3.5versA2.exe
+H:\yesterdays code\3.5versA2\3.5versA2\bin\x86\Debug\3.5versA2.pdb
+H:\yesterdays code\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.Common.dll
+H:\yesterdays code\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.Common.Native.dll
+H:\yesterdays code\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.NiLmClientDLL.dll
+H:\yesterdays code\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.MStudioCLM.dll
+H:\yesterdays code\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.Common.xml
+H:\yesterdays code\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.DAQmx.xml
+H:\313 Project version 2\3.5versA2\3.5versA2\bin\x86\Debug\3.5versA2.exe
+H:\313 Project version 2\3.5versA2\3.5versA2\bin\x86\Debug\3.5versA2.pdb
+H:\313 Project version 2\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.Common.dll
+H:\313 Project version 2\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.Common.Native.dll
+H:\313 Project version 2\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.NiLmClientDLL.dll
+H:\313 Project version 2\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.MStudioCLM.dll
+H:\313 Project version 2\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.Common.xml
+H:\313 Project version 2\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.DAQmx.xml
+H:\313 Project version 2\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csprojResolveAssemblyReference.cache
+H:\313 Project version 2\3.5versA2\3.5versA2\obj\x86\Debug\A2.Form1.resources
+H:\313 Project version 2\3.5versA2\3.5versA2\obj\x86\Debug\_3._5versA2.Properties.Resources.resources
+H:\313 Project version 2\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csproj.GenerateResource.Cache
+H:\313 Project version 2\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csproj.CoreCompileInputs.cache
+H:\313 Project version 2\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.exe
+H:\313 Project version 2\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.pdb
+C:\Users\Zehra\Documents\Uni\370\A2-zehra\3.5versA2\3.5versA2\bin\x86\Debug\3.5versA2.exe
+C:\Users\Zehra\Documents\Uni\370\A2-zehra\3.5versA2\3.5versA2\bin\x86\Debug\3.5versA2.pdb
+C:\Users\Zehra\Documents\Uni\370\A2-zehra\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.NiLmClientDLL.dll
+C:\Users\Zehra\Documents\Uni\370\A2-zehra\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.MStudioCLM.dll
+C:\Users\Zehra\Documents\Uni\370\A2-zehra\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.Common.xml
+C:\Users\Zehra\Documents\Uni\370\A2-zehra\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.DAQmx.xml
+C:\Users\Zehra\Documents\Uni\370\A2-zehra\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csprojAssemblyReference.cache
+C:\Users\Zehra\Documents\Uni\370\A2-zehra\3.5versA2\3.5versA2\obj\x86\Debug\A2.Form1.resources
+C:\Users\Zehra\Documents\Uni\370\A2-zehra\3.5versA2\3.5versA2\obj\x86\Debug\_3._5versA2.Properties.Resources.resources
+C:\Users\Zehra\Documents\Uni\370\A2-zehra\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csproj.GenerateResource.cache
+C:\Users\Zehra\Documents\Uni\370\A2-zehra\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csproj.CoreCompileInputs.cache
+C:\Users\Zehra\Documents\Uni\370\A2-zehra\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csproj.CopyComplete
+C:\Users\Zehra\Documents\Uni\370\A2-zehra\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.exe
+C:\Users\Zehra\Documents\Uni\370\A2-zehra\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.pdb
+H:\313 Project version 2\A2-zehra\3.5versA2\3.5versA2\bin\x86\Debug\3.5versA2.exe
+H:\313 Project version 2\A2-zehra\3.5versA2\3.5versA2\bin\x86\Debug\3.5versA2.pdb
+H:\313 Project version 2\A2-zehra\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.Common.dll
+H:\313 Project version 2\A2-zehra\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.Common.Native.dll
+H:\313 Project version 2\A2-zehra\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.NiLmClientDLL.dll
+H:\313 Project version 2\A2-zehra\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.MStudioCLM.dll
+H:\313 Project version 2\A2-zehra\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.Common.xml
+H:\313 Project version 2\A2-zehra\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.DAQmx.xml
+H:\313 Project version 2\A2-zehra\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csprojResolveAssemblyReference.cache
+H:\313 Project version 2\A2-zehra\3.5versA2\3.5versA2\obj\x86\Debug\_3._5versA2.Properties.Resources.resources
+H:\313 Project version 2\A2-zehra\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csproj.GenerateResource.Cache
+H:\313 Project version 2\A2-zehra\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csproj.CoreCompileInputs.cache
+H:\313 Project version 2\A2-zehra\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.exe
+H:\313 Project version 2\A2-zehra\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.pdb
+H:\313 Project version 2\A2-zehra\3.5versA2\3.5versA2\obj\x86\Debug\_3._5versA2.Form2.resources
+H:\313 Project version 2\A2-zehra\3.5versA2\3.5versA2\obj\x86\Debug\_3._5versA2.Form1.resources
+H:\313 Project version 2\A2-zehra\3.5versA2\3.5versA2\obj\x86\Debug\_3._5versA2.Form3.resources
+C:\Users\Zehra\Documents\Uni\370\baseline\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csprojAssemblyReference.cache
+C:\Users\Zehra\Documents\Uni\370\baseline\3.5versA2\3.5versA2\obj\x86\Debug\_3._5versA2.Form1.resources
+C:\Users\Zehra\Documents\Uni\370\baseline\3.5versA2\3.5versA2\obj\x86\Debug\_3._5versA2.Form2.resources
+C:\Users\Zehra\Documents\Uni\370\baseline\3.5versA2\3.5versA2\obj\x86\Debug\_3._5versA2.Form3.resources
+C:\Users\Zehra\Documents\Uni\370\baseline\3.5versA2\3.5versA2\obj\x86\Debug\_3._5versA2.Properties.Resources.resources
+C:\Users\Zehra\Documents\Uni\370\baseline\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csproj.GenerateResource.cache
+C:\Users\Zehra\Documents\Uni\370\baseline\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csproj.CoreCompileInputs.cache
+C:\Users\Zehra\Documents\Uni\370\baseline\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.exe
+C:\Users\Zehra\Documents\Uni\370\baseline\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.pdb
+C:\Users\Zehra\Documents\Uni\370\baseline\3.5versA2\3.5versA2\bin\x86\Debug\3.5versA2.exe
+C:\Users\Zehra\Documents\Uni\370\baseline\3.5versA2\3.5versA2\bin\x86\Debug\3.5versA2.pdb
+C:\Users\Zehra\Documents\Uni\370\baseline\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.NiLmClientDLL.dll
+C:\Users\Zehra\Documents\Uni\370\baseline\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.MStudioCLM.dll
+C:\Users\Zehra\Documents\Uni\370\baseline\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.Common.xml
+C:\Users\Zehra\Documents\Uni\370\baseline\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.DAQmx.xml
+C:\Users\Zehra\Documents\Uni\370\baseline\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csproj.CopyComplete
