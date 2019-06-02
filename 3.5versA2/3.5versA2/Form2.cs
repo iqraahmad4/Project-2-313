@@ -103,5 +103,10 @@ namespace _3._5versA2
         {
             this.Hide();
         }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -126,7 +126,7 @@ namespace _3._5versA2
             InitializeComponent();
                                                                                                                                       
                                                                                                                                                   
-              Console.WriteLine(dev);
+              //Console.WriteLine(dev);
  // dev = "7";
             aIn0.OpenChannel("0", "Ainport0",dev);
             aIn1.OpenChannel("1", "Ainport1",dev);
@@ -195,7 +195,7 @@ namespace _3._5versA2
             }
             else
             {
- Console.WriteLine("Heat & Fan Off");
+ //Console.WriteLine("Heat & Fan Off");
                 dOut.WriteData(0);
                 textBox5.Text = "Fan Off"; textBox4.Text = "Heater Off";
                 textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;
@@ -266,7 +266,7 @@ namespace _3._5versA2
 
                     for (int i = 0; i < 3; i++)
                     {
-                        Console.Write(" " + data[i]);
+                        //Console.Write(" " + data[i]);
 
                         if (data[i] == "")
                         {
@@ -289,15 +289,15 @@ namespace _3._5versA2
                     {  
                         textBox6.Text = temp.ToString();
                         int indexT = temp.ToString().LastIndexOf(".");
-                        Console.WriteLine(" temp is:-" + temp);
+                        //Console.WriteLine(" temp is:-" + temp);
                         if (temp != 0)
                         {
                                temp = Convert.ToDouble(temp.ToString().Substring(0, indexT + 5));
-                            Console.WriteLine(temp);
+                            //Console.WriteLine(temp);
                         }
                     }
                     
-                    Console.WriteLine("tally: " + tally + ": " + data[0] + " " + data[1] + " " + data[2]);
+                    //Console.WriteLine("tally: " + tally + ": " + data[0] + " " + data[1] + " " + data[2]);
                     using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"H:\Project-2-313\3.5versA2\Temperatures.txt", true))
                     {
                         file.WriteLine ("\n"+ count.ToString() + "\t"+data[0] + "\t"+data[1] + "\t"+ data[2] + "\t"+temp);
@@ -371,9 +371,25 @@ namespace _3._5versA2
                 ///DEBUGGING\\\
                 temp = (CalcTemp(0, ReadTemperaturet(aIn0)) + CalcTemp(1, ReadTemperaturet(aIn1)) + CalcTemp(2, ReadTemperaturet(aIn2))) / 3;
                 textBox6.Text = temp.ToString();
-// temp = (CalcTemp(0, ReadTemperaturet(sensor0reading)) + CalcTemp(1, ReadTemperaturet(sensor1reading)) + CalcTemp(2, ReadTemperaturet(sensor2reading))) / 3;
+                // temp = (CalcTemp(0, ReadTemperaturet(sensor0reading)) + CalcTemp(1, ReadTemperaturet(sensor1reading)) + CalcTemp(2, ReadTemperaturet(sensor2reading))) / 3;
                 ///NOT DEBUGGING\\\
-                 
+
+                if (temp > userTemp + 0.24 && temp < userTemp + 0.25)
+                {
+                    // Console.WriteLine("Heat &  Fan On");
+                    dOut.WriteData(3);
+                    textBox4.Text = "Heat On";
+                    textBox4.BackColor = Color.DarkSeaGreen;
+                    textBox5.Text = "Fan On";
+                    textBox5.BackColor = Color.DarkSeaGreen;
+                    /* for (int i=0;i<10; i++)
+                     {
+                      sensor0reading[i] = sensor0reading[i] + 0.15;
+                      sensor1reading[i] = sensor1reading[i] + 0.15;
+                      sensor2reading[i] = sensor2reading[i] + 0.15;
+                     }
+                      Console.WriteLine(sensor0reading[0] + " " + sensor1reading[0] + " " + sensor2reading); */
+                }
                 if (temp < userTemp - 0.245)
                 {
 
@@ -389,22 +405,7 @@ namespace _3._5versA2
  }
  Console.WriteLine(sensor0reading[0]+" " + sensor1reading[0]+" "+sensor2reading[0]);*/
                 }
-                if (temp > userTemp + 0.24 && temp < userTemp + 0.25)
-                {
- // Console.WriteLine("Heat &  Fan On");
-                    dOut.WriteData(3);
-                    textBox4.Text = "Heat On";
-                    textBox4.BackColor = Color.DarkSeaGreen;
-                    textBox5.Text = "Fan On";
-                    textBox5.BackColor = Color.DarkSeaGreen;
-/* for (int i=0;i<10; i++)
- {
-  sensor0reading[i] = sensor0reading[i] + 0.15;
-  sensor1reading[i] = sensor1reading[i] + 0.15;
-  sensor2reading[i] = sensor2reading[i] + 0.15;
- }
-  Console.WriteLine(sensor0reading[0] + " " + sensor1reading[0] + " " + sensor2reading); */
-                }
+                
                 if (temp > userTemp + 0.25)
                 {
   //Console.WriteLine("Heat & Fan Off");
@@ -479,6 +480,7 @@ namespace _3._5versA2
         //manually turn shit off
         private void button5_Click(object sender, EventArgs e)
         {
+          
             dOut.WriteData(1);
             textBox6.Text = temp.ToString();
             textBox4.Text = "Heat off";
@@ -498,8 +500,7 @@ namespace _3._5versA2
 
             if (clicked)
             {
-                dOut.WriteData(2);
-
+                dOut.WriteData(3);
             }
             else
             {
