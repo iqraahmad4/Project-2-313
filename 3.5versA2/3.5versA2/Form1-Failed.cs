@@ -79,6 +79,7 @@ namespace _3._5versA2
  double[] diff1 ={0,0,0,0,0 };
  double [] diff2 = { 0, 0, 0, 0, 0 };
         bool reseting=false;
+        bool Off = false;
         
         //Specifications for thermistors\\
         int[] r = { 10000, 5000, 100000 };       //~~Resistance @ 25 degrees~~\\
@@ -196,10 +197,13 @@ namespace _3._5versA2
             }
             else
             {
- //Console.WriteLine("Heat & Fan Off");
-                if (temp > roomTemp)
+                //Console.WriteLine("Heat & Fan Off");
+                Off = true;
+                temp = (CalcTemp(0, ReadTemperaturet(aIn0)) + CalcTemp(1, ReadTemperaturet(aIn1)) + CalcTemp(2, ReadTemperaturet(aIn2))) / 3;
+                Console.WriteLine("temp:" + temp + "> RT:" + roomTemp);
+                while (temp > roomTemp)
                 {
-                    temp = (CalcTemp(0, ReadTemperaturet(aIn0)) + CalcTemp(1, ReadTemperaturet(aIn1)) + CalcTemp(2, ReadTemperaturet(aIn2))) / 3;
+
                     //temp = (CalcTemp(0, ReadTemperaturet(sensor0reading)) + CalcTemp(1, ReadTemperaturet(sensor1reading)) + CalcTemp(2, ReadTemperaturet(sensor2reading))) / 3;
                     // Console.WriteLine("Fan on");
                     dOut.WriteData(1);
@@ -208,16 +212,21 @@ namespace _3._5versA2
                     textBox4.Text = "Heater Off";
                     textBox4.BackColor = Color.Firebrick;
                     textBox5.BackColor = Color.DarkSeaGreen;
+                    temp = (CalcTemp(0, ReadTemperaturet(aIn0)) + CalcTemp(1, ReadTemperaturet(aIn1)) + CalcTemp(2, ReadTemperaturet(aIn2))) / 3;
+                    Console.WriteLine("temp:" + temp + "> RT:" + roomTemp);
                 }
-                else
-                {
+                
+
                     //Console.WriteLine("Heat & Fan Off");
                     dOut.WriteData(0);
                     textBox5.Text = "Fan Off"; textBox4.Text = "Heater Off";
                     textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;
-                    reseting = false;
-                    On = false;
-                }
+                    reseting = !reseting;
+
+
+                
+
+                On = false;
             }
         }
 
@@ -431,6 +440,37 @@ namespace _3._5versA2
  }
    Console.WriteLine(sensor0reading[0] + " " + sensor1reading[0] + " " + sensor2reading); */
                 }
+            }
+            else
+            {
+               /* if (Off == true) tried to fix it didn't quite work
+                {
+                    temp = (CalcTemp(0, ReadTemperaturet(aIn0)) + CalcTemp(1, ReadTemperaturet(aIn1)) + CalcTemp(2, ReadTemperaturet(aIn2))) / 3;
+                    if (temp > roomTemp)
+                    {
+
+                        //temp = (CalcTemp(0, ReadTemperaturet(sensor0reading)) + CalcTemp(1, ReadTemperaturet(sensor1reading)) + CalcTemp(2, ReadTemperaturet(sensor2reading))) / 3;
+                        // Console.WriteLine("Fan on");
+                        dOut.WriteData(1);
+                        reseting = !reseting;
+                        textBox5.Text = "Fan On";
+                        textBox4.Text = "Heater Off";
+                        textBox4.BackColor = Color.Firebrick;
+                        textBox5.BackColor = Color.DarkSeaGreen;
+                        temp = (CalcTemp(0, ReadTemperaturet(aIn0)) + CalcTemp(1, ReadTemperaturet(aIn1)) + CalcTemp(2, ReadTemperaturet(aIn2))) / 3;
+                    }
+                    else
+                    {
+
+                        //Console.WriteLine("Heat & Fan Off");
+                        dOut.WriteData(0);
+                        textBox5.Text = "Fan Off"; textBox4.Text = "Heater Off";
+                        textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;
+                        reseting = !reseting;
+                       
+
+                    }
+                }*/
             }
         }
 
