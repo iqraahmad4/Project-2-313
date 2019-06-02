@@ -141,7 +141,7 @@ namespace _3._5versA2
  clicked = false;
             sensor1 = true;
             sensor2 = true;
-            using (System.IO.StreamReader parameters = new System.IO.StreamReader(@"H:\Project-2-313\3.5versA2\Coefficients.txt")) 
+            using (System.IO.StreamReader parameters = new System.IO.StreamReader(@"H:\Project-2-313\3.5versA2\Parameters.txt"))
             {
                 int lineCounter = 0;
                 string line;
@@ -178,7 +178,7 @@ namespace _3._5versA2
 
             if (On)
             {
-                using (System.IO.StreamReader parameters = new System.IO.StreamReader(@"H:\Project-2-313\3.5versA2\Coefficients.txt"))
+                using (System.IO.StreamReader parameters = new System.IO.StreamReader(@"H:\Project-2-313\3.5versA2\Parameters.txt"))
                 {
 
                     int lineCounter = 0;
@@ -186,7 +186,7 @@ namespace _3._5versA2
                     while ((line = parameters.ReadLine()) != null)
                     {
                         coefficentArray[lineCounter] = Convert.ToDouble(line);
-                        Console.WriteLine(coefficentArray[lineCounter]);
+                       // Console.WriteLine(coefficentArray[lineCounter]);
                         lineCounter++;
                     }
                     parameters.Close();
