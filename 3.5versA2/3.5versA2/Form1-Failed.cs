@@ -78,6 +78,7 @@ namespace _3._5versA2
  double [] diff0 = {0,0,0,0,0 };
  double[] diff1 ={0,0,0,0,0 };
  double [] diff2 = { 0, 0, 0, 0, 0 };
+        bool reseting=false;
         
         //Specifications for thermistors\\
         int[] r = { 10000, 5000, 100000 };       //~~Resistance @ 25 degrees~~\\
@@ -196,23 +197,27 @@ namespace _3._5versA2
             else
             {
  //Console.WriteLine("Heat & Fan Off");
-                dOut.WriteData(0);
-                textBox5.Text = "Fan Off"; textBox4.Text = "Heater Off";
-                textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;
-                while (temp > roomTemp)
+                if (temp > roomTemp)
                 {
                     temp = (CalcTemp(0, ReadTemperaturet(aIn0)) + CalcTemp(1, ReadTemperaturet(aIn1)) + CalcTemp(2, ReadTemperaturet(aIn2))) / 3;
- //temp = (CalcTemp(0, ReadTemperaturet(sensor0reading)) + CalcTemp(1, ReadTemperaturet(sensor1reading)) + CalcTemp(2, ReadTemperaturet(sensor2reading))) / 3;
-// Console.WriteLine("Fan on");
+                    //temp = (CalcTemp(0, ReadTemperaturet(sensor0reading)) + CalcTemp(1, ReadTemperaturet(sensor1reading)) + CalcTemp(2, ReadTemperaturet(sensor2reading))) / 3;
+                    // Console.WriteLine("Fan on");
                     dOut.WriteData(1);
+                    reseting = !reseting;
                     textBox5.Text = "Fan On";
+                    textBox4.Text = "Heater Off";
+                    textBox4.BackColor = Color.Firebrick;
                     textBox5.BackColor = Color.DarkSeaGreen;
                 }
- //Console.WriteLine("Heat & Fan Off");
-                dOut.WriteData(0);
-                textBox5.Text = "Fan Off"; textBox4.Text = "Heater Off";
-                textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;
-                On = false;
+                else
+                {
+                    //Console.WriteLine("Heat & Fan Off");
+                    dOut.WriteData(0);
+                    textBox5.Text = "Fan Off"; textBox4.Text = "Heater Off";
+                    textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;
+                    reseting = false;
+                    On = false;
+                }
             }
         }
 
@@ -232,7 +237,7 @@ namespace _3._5versA2
  //volt0Weighted = ReadTemperaturet(sensor0reading);
  //volt1Weighted = ReadTemperaturet(sensor1reading);
  //volt2Weighted = ReadTemperaturet(sensor2reading);
-            if (On) 
+            if (On || reseting) 
             {
                 
                 timerticks += 1;
@@ -288,9 +293,9 @@ namespace _3._5versA2
                     else
                     {  
                         textBox6.Text = temp.ToString();
-                        int indexT = temp.ToString().LastIndexOf(".");
+                        int indexT = temp.ToString().LastIndexOf(" ");
                         //Console.WriteLine(" temp is:-" + temp);
-                        if (temp != 0)
+                        if (temp.ToString().Length-temp.ToString().IndexOf(".")-1>5)
                         {
                                temp = Convert.ToDouble(temp.ToString().Substring(0, indexT + 5));
                             //Console.WriteLine(temp);
