@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -16,133 +16,103 @@ using System.Threading;
 namespace _3._5versA2
 {
     public partial class Form1 : Form
-    {                                              //\/\/\// Global //\/\/\/\//
-        double userTemp;                          //***desired temperature***\\
-        double[] coefficentArray = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-        double volt0Weighted = 0;
-        double volt1Weighted = 0;
-        double volt2Weighted = 0;
-        //***Boolean for button pressed on/off***\\
-        bool On;
- bool clicked;
-        bool sensor0;
-        bool sensor1;
-        bool sensor2;
-        string dev;
-
-        DigitalO dOut = new DigitalO();
-        //***Channels for each thermistor***\\
-        AnalogI aIn0 = new AnalogI();           /**Sensor 0**/
-        AnalogI aIn1 = new AnalogI();           /**Sensor 1**/
-        AnalogI aIn2 = new AnalogI();           /**Sensor 2**/
- /*double[] sensor0reading = {2.4938971044,
-2.5159185788,
-2.4783781328,
-2.4521162885,
-2.4288716362,
-2.4075779807,
-2.4337822977,
-2.4673335185,
-2.4810056047,
-2.5437641690,
- };
- double[] sensor1reading = {2.4313007943,
-2.4417858576,
-2.4283583747,
-2.4436416907,
-2.4425631201,
-2.5180824422,
-2.4798205561,
-2.4036755791,
-2.4560132292,
-2.4360713194,
-        };
- double[] sensor2reading = { 2.5321972045,
-2.5055118872,
-2.5249082119,
-2.4897940094,
-2.4272520015,
-2.5164960523,
-2.4636127445,
-2.4104448390,
-2.4829308082,
-2.52712710988 }; */
+    {                                                                           //\/\/\// Global Variables //\/\/\/\//
+        double[] coefficentArray = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };                                //*               Filter Parameters                   *\\
+        double userTemp;                                                                                         //*              Desired Temperature             *\\
+        double temp;                                                                                                //*               Current Temperature            *\\
+        double roomTemp;                                                                                       //*          Initial Room Temperature          *\\
+        double volt0Weighted = 0;                                                                          //*          Filtered Voltage: Sensor 0          *\\
+        double volt1Weighted = 0;                                                                          //*          Filtered Voltage: Sensor 1          *\\
+        double volt2Weighted = 0;                                                                          //*          Filtered Voltage: Sensor 2          *\\
+        bool On;                                                                                                       //*                   System On/Off                  *\\                    
+        bool sensor0;                                                                                               //*                  Sensor 0 On/Off                 *\\
+        bool sensor1;                                                                                               //*                  Sensor 1 On/Off                 *\\
+        bool sensor2;                                                                                               //*                  Sensor 2 On/Off                 *\\
+        string dev;;                                                                                                   //*                   Device Number                 *\\     
+                                                                                                                            //*       Channels for each thermistor        *\\
+        AnalogI aIn0 = new AnalogI();                                                                    //*                 Sensor 0 Channel                 *\\
+        AnalogI aIn1 = new AnalogI();                                                                    //*                 Sensor 1 Channel                 *\\
+        AnalogI aIn2 = new AnalogI();                                                                    //*                 Sensor 2 Channel                 *\\
 
 
-        int count = 0;
-        int timerticks = 0;
- int ticker = 0;
+                                                                                                                           //*       Specifications for thermistors        *\\
+                                                                                                                           //*         [sensor 0, sensor1, sensor2]         *\\
+        int[] r = { 10000, 5000, 100000 };                                                                //*     ~~ Resistance @ 25 degrees ~~     *\\
+        int[] B = { 3380, 3960, 4380 };                                                                     //*                 ~~ B constant ~~                *\\
+        int count = 0;                                                                                              //*            Data Collected Counter            *\\
+        int timerticks = 0;                                                                                       //*                    Timer Counter                   *\\
+        DigitalO dOut = new DigitalO();                                                                         //\/\/\// Global Variables //\/\/\/\//
+                                                          
+                ///DEBUGGING\\\
+bool clicked;
+int ticker = 0;
  double temp0s0 = 0;
  double temp1s1 = 0;
  double temp2s2 = 0;
  double [] diff0 = {0,0,0,0,0 };
  double[] diff1 ={0,0,0,0,0 };
  double [] diff2 = { 0, 0, 0, 0, 0 };
-        bool reseting=false;
-        bool Off = false;
-        
-        //Specifications for thermistors\\
-        int[] r = { 10000, 5000, 100000 };       //~~Resistance @ 25 degrees~~\\
-                                                 /**Sensor 0**/
-                                                 /**Sensor 1**/
-                                                 /**Sensor 2**/
-        int[] B = { 3380, 3960, 4380 };        //~~B constant~~\\
-                                                 /**Sensor 0**/
-                                                 /**Sensor 1**/
-                                                 /**Sensor 2**/
+ bool reseting=false;
+ bool Off = false;
 
-        double temp;                            //***Current Temperature***\\
-        double roomTemp;                        //***Initial Room temperature***\\
-
+                                                                                                                                        //\/\/\// Helper Functions //\/\/\/\//
+/*
+Helper Function: ReadTemperature 
+Reads voltage from a sensor and applies filter parameters 
+to rolled averages of voltage to output a weighted average.
+    Input: aIn ~ Analog Channel for Sensor. 
+    Output: voltWeighted ~  Weighted Aaverage Voltage.
+*/
         private double ReadTemperaturet(AnalogI aIn)
- //private double ReadTemperaturet(double[] sensor)
         {
-            double[] volt = aIn.ReadData();
-
-  //double[] volt = sensor;
-            double voltWeighted = 0;
-            for (int i = 0; i < 6; i++)
+            double[] volt = aIn.ReadData();                                                 //*               Read Rolled Average Voltages from Analog File            *\\
+            for (int i = 0; i < 6; i++)                                                             //*                 For each element in the Rolled Voltage Array              *\\
             {
-                volt[i] = volt[i] * coefficentArray[i];
-                voltWeighted += volt[i];
+                volt[i] = volt[i] * coefficentArray[i];                                       //*    Multiply average wth the corresponding weight co-efficient    *\\
+                voltWeighted += volt[i];                                                       //*                       Sum up weighted voltage averages                        *\\
             }
             return voltWeighted;
         }
 
-        private double CalcTemp(int sensorNumber, double voltWeighted)
-        {
-            double temp = B[sensorNumber] / (Math.Log((r[sensorNumber]*(voltWeighted / (5 - voltWeighted))) / (r[sensorNumber] * Math.Exp(-B[sensorNumber] / 298.15))));
-            temp = temp - 273.15;
-            textBox6.Text = temp.ToString();
+/*
+Helper Function: CalcTemp 
+Calculates temperature for a sensor based on its beta constant
+and its value of resistance at 25 degrees Celcius and voltage
+of the sensor. 
+Uses equation T = B / (ln( (R0 * V/(5-V)) / R0* e^(-B/T0))).
+Here, T0 = 25 degrees Celcius = 298 degrees Kelvin.
+    Input: sensorNumber ~ Sensor Index in Resistance Array and B-Constant Array,
+              volt ~ Voltage at the Sensor.
+    Output: temp ~  Calculated Temperature.
+*/
+        private double CalcTemp(int sensorNumber, double volt)
+        {                                                                                                                    //*        Substitute all variables into equation       *\\
+            double temp = B[sensorNumber] / (Math.Log((r[sensorNumber]*(volt / (5 - volt))) / (r[sensorNumber] * Math.Exp(-B[sensorNumber] / 298.15))));
+            temp = temp - 273.15;                                                                            //*   Convert from Kelvin to Celcius: C=K-273.15  *\\
             return temp;
         }
 
 
         public Form1()
         {
-            // *** Initializing all components and opening each channel once for each thermistor sensor.
+            
             // Setting 'On' to false inside the  so that system is switched off when it starts.
-            Form3 input = new Form3();
-            input.ShowDialog();
-            dev = input.ReadDeviceNumber();
-            InitializeComponent();
-                                                                                                                                      
-                                                                                                                                                  
-              //Console.WriteLine(dev);
- // dev = "7";
-            aIn0.OpenChannel("0", "Ainport0",dev);
-            aIn1.OpenChannel("1", "Ainport1",dev);
-            aIn2.OpenChannel("2", "Ainport2",dev);
-            dOut.OpenChannel(dev);
-            On = false;
+            Form3 input = new Form3();                                                                        //*   Open User Form to input the device number   *\\
+            input.ShowDialog();                                                                                     //*              for the temperature chamber                 *\\
+            dev = input.ReadDeviceNumber();                                                             //*             Read Device Number from form               *\\
+
+            InitializeComponent();                                                                               //*                   Initializing all components                    *\\
+                                                                                                                              //*      Opening Channels for Thermistor sensors         *\\
+            aIn0.OpenChannel("0", "Ainport0",dev) ;aIn1.OpenChannel("1", "Ainport1",dev);  aIn2.OpenChannel("2", "Ainport2",dev);                 
+            dOut.OpenChannel(dev);                                                                          //*                        Open Digital Channel                       *\\
+            On = false;                                                                                                //*                    Set System initially to 'Off'                    *\\
  //Console.WriteLine("Heat&Fan Off");
-            dOut.WriteData(0);
-            textBox5.Text = "Fan Off"; textBox4.Text = "Heater Off";
-            textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;
-            sensor0 = true;
- clicked = false;
-            sensor1 = true;
-            sensor2 = true;
+            dOut.WriteData(0);                                                                                   //*               Set Fan and Heater initally to  'Off'             *\\
+                                                                                                                             //* Change GUI to reflect status of the fan andheater   *\\
+            textBox5.Text = "Fan Off"; textBox4.Text = "Heater Off"; textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;
+ clicked = false;                                                                                                   
+            sensor0 = true; sensor1 = true; sensor2 = true;                                       //*                   Set all sensors initally to 'On'                  *\\
+                                                                                                                             //* Read Filter Parameters from text file   *\\
             using (System.IO.StreamReader parameters = new System.IO.StreamReader(@"H:\Project-2-313\3.5versA2\Parameters.txt"))
             {
                 int lineCounter = 0;
@@ -150,36 +120,36 @@ namespace _3._5versA2
 
                 while ((line = parameters.ReadLine()) != null)
                 {
-                    coefficentArray[lineCounter] = Convert.ToDouble(line);
+                    coefficentArray[lineCounter] = Convert.ToDouble(line);              //* Enter each weightage co-efficient into Coefficient Array *\\
                     lineCounter++;
                 }
                 parameters.Close();
                 lineCounter = 0;
-            }
-            roomTemp = (CalcTemp(0, ReadTemperaturet(aIn0)) + CalcTemp(1, ReadTemperaturet(aIn1)) + CalcTemp(2, ReadTemperaturet(aIn2))) / 3;
+            }                                                               
+                                                                                                                                 //*                         Calculate Room Temperature                                 *\\
+            roomTemp = (CalcTemp(0, ReadTemperaturet(aIn0)) + CalcTemp(1, ReadTemperaturet(aIn1)) + CalcTemp(2, ReadTemperaturet(aIn2))) / 3; 
  //roomTemp = 25;
-            userTemp = Convert.ToDouble(numericUpDown1.Value) + roomTemp;
+            userTemp = Convert.ToDouble(numericUpDown1.Value) + roomTemp;   //* Set desired temperature as User Input (2-5) + room temperature  *\\
             textBox7.Text = userTemp.ToString();
         }
 
-        // Turning System on/off. On varriable is toggled between its two settings, true/false. 
-        // True--> turn system on. False--> turn system off.
-        // When true, the system measures the values of the three thermistors at that interval, 
-        // and calculates the average current room temperature using the algorithm 
-        // T = B / (Ln ( (V / (5-V)) / (R * e ^ (-B / 25))).
-        // User input is read and verified if it falls within the right range, 2 - 5 degrees above room temperature.
-        // Heater is turned on and dystem reaches the desired temperature and then continues to maintain within a 0.25 range 
-        // of the desired temperature through turning the heater and fan on and off until the system is switch off.
-        // When false, heater is turned off, fan is turn back on until the temperature read is at room temperature again. 
-        // System then turns fan off and is officially off.
+/*
+Button 1: Turn System On/Off
+Turns system on and off. Bool 'On' toggles between true/false when button is pressed 
+by the user in the GUI. True--> On; False--> Off.
+When true, the system reads the parameters file and stores weight coefficient values 
+in the Coefficient Array.
+When false, the heater is turned off, the fan is turned on and the system cools 
+back to room temperature, before turning the fan off.
+*/
         private void button1_Click(object sender, EventArgs e)
         {
             DigitalO dOut = new DigitalO();
             dOut.OpenChannel(dev);
-            On = !On;
+            On = !On;                                                                                                //*                Toggle the button  'On' or 'Off'                *\\
 
-            if (On)
-            {
+            if (On)                                                                                                      //*                    If turning the system on                        *\\
+            {                                                                                                               //*             Read Filter Parameters from text file            *\\
                 using (System.IO.StreamReader parameters = new System.IO.StreamReader(@"H:\Project-2-313\3.5versA2\Parameters.txt"))
                 {
 
@@ -187,38 +157,35 @@ namespace _3._5versA2
                     string line;
                     while ((line = parameters.ReadLine()) != null)
                     {
-                        coefficentArray[lineCounter] = Convert.ToDouble(line);
-                       // Console.WriteLine(coefficentArray[lineCounter]);
+                        coefficentArray[lineCounter] = Convert.ToDouble(line);           //*        Enter each weight coefficient into Coefficient Array         *\\
                         lineCounter++;
                     }
                     parameters.Close();
                     lineCounter = 0;
                 }
             }
-            else
+            else                                                                                                        //*                     If turning the system off                                       *\\
             {
                 //Console.WriteLine("Heat & Fan Off");
                 Off = true;
+                                                                                                                         //*                            Calculate current temperature                         *\\
                 temp = (CalcTemp(0, ReadTemperaturet(aIn0)) + CalcTemp(1, ReadTemperaturet(aIn1)) + CalcTemp(2, ReadTemperaturet(aIn2))) / 3;
                 Console.WriteLine("temp:" + temp + "> RT:" + roomTemp);
-                while (temp > roomTemp)
+                while (temp > roomTemp)                                                              //* While  current temperature is higher than  room temperature   *\\
                 {
-
-                    //temp = (CalcTemp(0, ReadTemperaturet(sensor0reading)) + CalcTemp(1, ReadTemperaturet(sensor1reading)) + CalcTemp(2, ReadTemperaturet(sensor2reading))) / 3;
-                    // Console.WriteLine("Fan on");
-                    dOut.WriteData(1);
+                    dOut.WriteData(1);                                                                     //*                                          Keep  fan on                                          *\\
                     reseting = !reseting;
-                    textBox5.Text = "Fan On";
-                    textBox4.Text = "Heater Off";
-                    textBox4.BackColor = Color.Firebrick;
-                    textBox5.BackColor = Color.DarkSeaGreen;
+                                                                                                                         //*        Change GUI to reflect status of the fan andheater               *\\
+                    textBox5.Text = "Fan On"; textBox4.Text = "Heater Off"; textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.DarkSeaGreen;
+                                                                                                                         //*                            Calculate current temperature                         *\\
                     temp = (CalcTemp(0, ReadTemperaturet(aIn0)) + CalcTemp(1, ReadTemperaturet(aIn1)) + CalcTemp(2, ReadTemperaturet(aIn2))) / 3;
-                    Console.WriteLine("temp:" + temp + "> RT:" + roomTemp);
+                    Console.WriteLine("temp:" + temp + "> RT:" + roomTemp);        
                 }
                 
 
                     //Console.WriteLine("Heat & Fan Off");
-                    dOut.WriteData(0);
+                    dOut.WriteData(0);                                                                          //* When current temperature is below Room temperature, turn fan 'Off'  *\\
+                                                                                                                              //* Change GUI to reflect status of the fan andheater   *\\
                     textBox5.Text = "Fan Off"; textBox4.Text = "Heater Off";
                     textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;
                     reseting = !reseting;
@@ -230,18 +197,22 @@ namespace _3._5versA2
             }
         }
 
-
-
-        // Timer ticks every 0.1 seconds, frequency of 10 Hz. At each tick, the voltage data is read.
-        // Every 5 ticks, or 0.5 seconds, the temperature for each voltage reading from the sensors is calculated
-        // usung the algorithm written above, for the sensors the user activates, all sensors are on by default
-        // Sensors whose temperatures were calculated is outputted into the corresponding textbox for that sensor 
-        // and data is written into the .txt file 'Temperatures'. timerticks is reset to 0 to recount 5 ticks for 0.5 seconds.
+ /*
+Timer 1: Reading Voltages & Calculating Temperatures
+Timer ticks ever 0.1 seconds, a frequency of 10 Hz. At each tick, the voltage data is read
+as an array of 6 rolled averages and the data is weighted against ,per sensor.
+Every 5 ticks, or 0.5 seeconds, the temperature for each sensor is calculated, provided
+that sensor is activated. Sensors whose temperatures were calculated are output into 
+their corresponding textboxes. The individual sensor temperatures, as well as an average
+of all the calculated sensor temperatures are written into a text file 'Temperatures'
+The timer counter resets to 0 after 5 ticks to recount another period of 0.5 seconds.
+*/
         private void timer1_Tick(object sender, EventArgs e)
         {
+                                                                                                                                          //* Change GUI to reflect status of the fan andheater   *\\
             //here we need to get array of 5 and for each value we apply the coeffiecent the after applying coefficient we average them again to get the single volt measurement
-            volt0Weighted = ReadTemperaturet(aIn0);
-            volt1Weighted = ReadTemperaturet(aIn1);
+            volt0Weighted = ReadTemperaturet(aIn0);                                                          //* Get weighted average of voltage for each sensor    *\\
+            volt1Weighted = ReadTemperaturet(aIn1); 
             volt2Weighted = ReadTemperaturet(aIn2);
  //volt0Weighted = ReadTemperaturet(sensor0reading);
  //volt1Weighted = ReadTemperaturet(sensor1reading);
