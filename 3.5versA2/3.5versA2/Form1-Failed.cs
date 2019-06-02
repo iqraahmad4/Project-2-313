@@ -18,7 +18,7 @@ namespace _3._5versA2
     public partial class Form1 : Form
     {                                              //\/\/\// Global //\/\/\/\//
         double userTemp;                          //***desired temperature***\\
-        double[] coefficentArray = { 0, 0, 0, 0, 0, 0 };
+        double[] coefficentArray = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
         double volt0Weighted = 0;
         double volt1Weighted = 0;
         double volt2Weighted = 0;
@@ -78,6 +78,7 @@ namespace _3._5versA2
  double [] diff0 = {0,0,0,0,0 };
  double[] diff1 ={0,0,0,0,0 };
  double [] diff2 = { 0, 0, 0, 0, 0 };
+        
         //Specifications for thermistors\\
         int[] r = { 10000, 5000, 100000 };       //~~Resistance @ 25 degrees~~\\
                                                  /**Sensor 0**/
@@ -119,11 +120,12 @@ namespace _3._5versA2
         {
             // *** Initializing all components and opening each channel once for each thermistor sensor.
             // Setting 'On' to false inside the  so that system is switched off when it starts.
+            Form3 input = new Form3();
+            input.ShowDialog();
+            dev = input.ReadDeviceNumber();
             InitializeComponent();
                                                                                                                                       
-                                                                                                                                                  Form3 input = new Form3();
-                                                                                                                                                  input.ShowDialog();
-                                                                                                                                         dev = input.ReadDeviceNumber();
+                                                                                                                                                  
               Console.WriteLine(dev);
  // dev = "7";
             aIn0.OpenChannel("0", "Ainport0",dev);
@@ -139,7 +141,7 @@ namespace _3._5versA2
  clicked = false;
             sensor1 = true;
             sensor2 = true;
-            using (System.IO.StreamReader parameters = new System.IO.StreamReader(@"C:\Users\Zehra\Documents\Uni\370\baseline\3.5versA2\Coefficients.txt")) 
+            using (System.IO.StreamReader parameters = new System.IO.StreamReader(@"H:\Project-2-313\3.5versA2\Coefficients.txt")) 
             {
                 int lineCounter = 0;
                 string line;
@@ -176,11 +178,11 @@ namespace _3._5versA2
 
             if (On)
             {
-                using (System.IO.StreamReader parameters = new System.IO.StreamReader(@"C:\Users\Zehra\Documents\Uni\370\baseline\3.5versA2\Coefficients.txt"))
+                using (System.IO.StreamReader parameters = new System.IO.StreamReader(@"H:\Project-2-313\3.5versA2\Coefficients.txt"))
                 {
+
                     int lineCounter = 0;
                     string line;
-
                     while ((line = parameters.ReadLine()) != null)
                     {
                         coefficentArray[lineCounter] = Convert.ToDouble(line);
@@ -291,11 +293,12 @@ namespace _3._5versA2
                         if (temp != 0)
                         {
                                temp = Convert.ToDouble(temp.ToString().Substring(0, indexT + 5));
+                            Console.WriteLine(temp);
                         }
                     }
                     
                     Console.WriteLine("tally: " + tally + ": " + data[0] + " " + data[1] + " " + data[2]);
-                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"C:\Users\Zehra\Documents\Uni\370\baseline\3.5versA2\Temperatures.txt",true))
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"H:\Project-2-313\3.5versA2\Temperatures.txt", true))
                     {
                         file.WriteLine ("\n"+ count.ToString() + "\t"+data[0] + "\t"+data[1] + "\t"+ data[2] + "\t"+temp);
                     }
