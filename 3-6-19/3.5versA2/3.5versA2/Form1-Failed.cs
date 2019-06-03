@@ -58,19 +58,7 @@ int ticker = 0;
  bool Off = false;
    
 
-                                                                                                                                                                 //*                                                                 *\\
-        private void GUISettings(bool  Item, TextBox text, string item)
-        {
-            if (Item)
-            {
-                text.Text = item+" On";  text.BackColor = Color.DarkSeaGreen;
-            }
-            else
-            {
-                text.Text = item+" Off"; text.BackColor = Color.DarkSeaGreen;
-            }
-        }
-
+        
                                                                                                                                         //\/\/\/\/\/\/\/\/\/\// Helper Functions //\/\/\/\/\/\/\/\/\/\\
 
 
@@ -89,31 +77,63 @@ int ticker = 0;
             aIn1.OpenChannel("1", "Ainport1",dev);                                                                                                  //*                          Sensor 1 Channel                      *\\
             aIn2.OpenChannel("2", "Ainport2",dev);                                                                                                  //*                          Sensor 2 Channel                      *\\        
             dOut.OpenChannel(dev);                                                                                                                  //*                        Open Digital Channel                    *\\
-            On = false;                                                                                                                             //*                    Set System initially to 'Off'               *\\
-                                                                                                                                                    //*                                                                *\\
+            On = false;
+            //*                                                                 *\\
+          
+            //*                    Set System initially to 'Off'               *\\
+            //*                                                                *\\
             dOut.WriteData(0);                                                                                                                      //*                Set Fan and Heater initally to  'Off'           *\\  
-            //GUISettings(false, textBox5, "Fan"); GUISettings(false, textBox4, "Heat");                                                              //*        Change GUI to reflect status of the fan and heater      *\\
+            GUISettings(false, textBox5, "Fan"); GUISettings(false, textBox4, "Heat");                                                              //*        Change GUI to reflect status of the fan and heater      *\\
    clicked = false; clicked6 = false;                                                                                                      //*                                                                *\\
             sensor0 = true; sensor1 = true; sensor2 = true;                                                                                         //*                   Set all sensors initally to 'On'             *\\
             coefficentArray = func.ReadParameters(ParameterPath, coefficentArray);                                                                                    //*                Read Filter Parameters from text file           *\\
-                                                                                                                                                    //*                                                                *\\
-                                                                                                                                               //*                  Calculate Room Temperature                    *\\
-            roomTemp =  (func.CalcTemp(0, func.ReadTemperaturet(aIn0, coefficentArray)) + 
-                func.CalcTemp(1, func.ReadTemperaturet(aIn1,coefficentArray)) + 
-                func.CalcTemp(2, func.ReadTemperaturet(aIn2,coefficentArray))) / 3;                                                                 //*                                                                *\\
+                                                                                                                                                                      //*                                                                *\\
+                                                                                                                                                                      //*                  Calculate Room Temperature                    *\\
+            roomTemp = 25.0;//  (func.CalcTemp(0, func.ReadTemperaturet(aIn0, coefficentArray)) + 
+                //func.CalcTemp(1, func.ReadTemperaturet(aIn1,coefficentArray)) + 
+                //func.CalcTemp(2, func.ReadTemperaturet(aIn2,coefficentArray))) / 3;                                                                 //*                                                                *\\
             userTemp = Convert.ToDouble(numericUpDown1.Value) + roomTemp;                                                                           //* Set desired temperature as User Input (2-5) + room temperature *\\
             textBox7.Text = userTemp.ToString(); Console.WriteLine("RT: " + roomTemp);                                                              //*                                                                *\\
         }                                                                                                                                           //*                                                                *\\
-                                                                                                                                                       //\/\/\/\/\/\/\/\/\/\/\// Initialization //\/\/\/\/\/\/\/\/\/\/\\
-/*
-Button 1: Turn System On/Off
-Turns system on and off. Bool 'On' toggles between true/false when button is pressed 
-by the user in the GUI. True--> On; False--> Off.
-When true, the system reads the parameters file and stores weight coefficient values 
-in the Coefficient Array.
-When false, the heater is turned off, the fan is turned on and the system cools 
-back to room temperature, before turning the fan off.
-*/
+        private void GUISettings(bool Item, TextBox textbox, string item)
+        {
+
+            if (textbox.InvokeRequired)
+            {
+                if (Item)
+                {
+
+                    textbox.Invoke((MethodInvoker)delegate { textbox.Text = item + " On"; });
+                    textbox.Invoke((MethodInvoker)delegate { textbox.BackColor = Color.DarkSeaGreen; });
+                    
+                }
+                else
+                {
+                    textbox.Invoke((MethodInvoker)delegate { textbox.Text = item + " Off"; });
+                    textbox.Invoke((MethodInvoker)delegate { textbox.BackColor = Color.Firebrick; });
+                }
+            }
+            else
+            {
+                if (Item)
+                {
+                    textbox.Text = item + " On"; textbox.BackColor = Color.DarkSeaGreen;
+                }
+                else
+                {
+                    textbox.Text = item + " Off"; textbox.BackColor = Color.Firebrick;
+                }
+            }
+        }                                                                                                                                     //\/\/\/\/\/\/\/\/\/\/\// Initialization //\/\/\/\/\/\/\/\/\/\/\\
+                                                                                                                                              /*
+                                                                                                                                              Button 1: Turn System On/Off
+                                                                                                                                              Turns system on and off. Bool 'On' toggles between true/false when button is pressed 
+                                                                                                                                              by the user in the GUI. True--> On; False--> Off.
+                                                                                                                                              When true, the system reads the parameters file and stores weight coefficient values 
+                                                                                                                                              in the Coefficient Array.
+                                                                                                                                              When false, the heater is turned off, the fan is turned on and the system cools 
+                                                                                                                                              back to room temperature, before turning the fan off.
+                                                                                                                                              */
         private void button1_Click(object sender, EventArgs e)                                                                                              //*                                                                    *\\
         {                                                                                                                                                   //*                                                                    *\\
             DigitalO dOut = new DigitalO();                                                                                                                 //*                                                                    *\\                                                                                         //*                                                                    *\\
@@ -273,8 +293,8 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                        dOut.WriteData(0);
                        dOut.WriteData(1);
                     Console.WriteLine(temp);
-                    //GUISettings(true, textBox5, "Fan");
-                    //GUISettings(false, textBox4, "Heat");
+                    GUISettings(true, textBox5, "Fan");
+                    GUISettings(false, textBox4, "Heat");
                     //  textBox5.Text = "Fan On"; textBox4.Text = "Heater Off"; 
                     //textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.DarkSeaGreen;
                 }
@@ -283,8 +303,8 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                     dOut.WriteData(0);
                     dOut.WriteData(2);
                     Console.WriteLine(temp);
-                    //GUISettings(false, textBox5, "Fan");
-                    //GUISettings(true, textBox4, "Heat");
+                    GUISettings(false, textBox5, "Fan");
+                    GUISettings(true, textBox4, "Heat");
                     //  textBox5.Text = "Fan Off"; textBox4.Text = "Heater Off"; 
                     //textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;
                 }
@@ -292,8 +312,8 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                    {
                        dOut.WriteData(0);
                     Console.WriteLine(temp);
-                    //GUISettings(false, textBox5, "Fan");
-                    //GUISettings(false, textBox4, "Heaat");
+                    GUISettings(false, textBox5, "Fan");
+                    GUISettings(false, textBox4, "Heaat");
                     //textBox5.Text = "Fan On"; textBox4.Text = "Heater On"; 
                     //textBox4.BackColor = Color.DarkSeaGreen; textBox5.BackColor = Color.DarkSeaGreen;
                 }
@@ -301,8 +321,8 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                 if (!On)
                 {
                     dOut.WriteData(0);
-                    //GUISettings(false, textBox5, "Fan");
-                    //GUISettings(false, textBox4, "Heaat");
+                    GUISettings(false, textBox5, "Fan");
+                    GUISettings(false, textBox4, "Heaat");
                     //textBox5.Text = "Fan Off"; textBox4.Text = "Heater Off"; textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;
                 }
 
@@ -402,7 +422,7 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                 dOut.WriteData(0);
                 dOut.WriteData(1);                                                                                                                      //*                           Keep  fan on                             *\\
                 reseting = true;
-            //GUISettings(true, textBox5, "Fan");  GUISettings(false, textBox4, "Heat");            //*                                                                    *\\
+            GUISettings(true, textBox5, "Fan");  GUISettings(false, textBox4, "Heat");            //*                                                                    *\\
                // textBox5.Text = "Fan On"; textBox4.Text = "Heater Off"; textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.DarkSeaGreen;  //*         Change GUI to reflect status of the fan and heater         *\\
                                                                                                                                                       //*                                                                    *\\
                                                                                                                                                         //*                                                                    *\\                
@@ -423,7 +443,7 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
             else
             {
                 dOut.WriteData(0);                                                                                                                      //* When current temperature is below Room temperature, turn fan 'Off' *\\
-                //GUISettings(false, textBox5, "Fan"); GUISettings(false, textBox4, "Heat");                                                                                                                                                                                                              // textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;                                                             //*                                                                    *\\
+                GUISettings(false, textBox5, "Fan"); GUISettings(false, textBox4, "Heat");                                                                                                                                                                                                              // textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;                                                             //*                                                                    *\\
                 reseting = false;
             }
         }
