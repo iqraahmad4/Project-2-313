@@ -41,8 +41,8 @@ namespace _3._5versA2
         int timerticks = 0;                                                 //*              Timer Counter            *\\
         DigitalO dOut = new DigitalO();                                         //\/\/\// Global Variables //\/\/\/\//
         int closingcount;
-        string ParameterPath = @"H:\313 Project version 2\Project-2-313-master\3.5versA2\Parameters.txt";
-        string tempPath = @"H:\313 Project version 2\Project-2-313-master\3.5versA2\Temperatures.txt";
+        string ParameterPath = @"H:\Project-2-313\3-6-19\3.5versA2\Parameters.txt";
+        string tempPath = @"H:\Project-2-313\3-6-19\3.5versA2\Temperatures.txt";
         Functions func = new Functions();
 
                 ///DEBUGGING\\\
@@ -92,7 +92,7 @@ int ticker = 0;
             On = false;                                                                                                                             //*                    Set System initially to 'Off'               *\\
                                                                                                                                                     //*                                                                *\\
             dOut.WriteData(0);                                                                                                                      //*                Set Fan and Heater initally to  'Off'           *\\  
-            GUISettings(false, textBox5, "Fan"); GUISettings(false, textBox4, "Heat");                                                              //*        Change GUI to reflect status of the fan and heater      *\\
+            //GUISettings(false, textBox5, "Fan"); GUISettings(false, textBox4, "Heat");                                                              //*        Change GUI to reflect status of the fan and heater      *\\
    clicked = false; clicked6 = false;                                                                                                      //*                                                                *\\
             sensor0 = true; sensor1 = true; sensor2 = true;                                                                                         //*                   Set all sensors initally to 'On'             *\\
             coefficentArray = func.ReadParameters(ParameterPath, coefficentArray);                                                                                    //*                Read Filter Parameters from text file           *\\
@@ -169,14 +169,14 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                     }                                                                                                                       //*                                                        *\\
                     if (sensor1)                                                                                                            //*                    If sensor activate                  *\\
                     {                                                                                                                       //*                                                        *\\
-                        data = func.sensorCalc(volt0Weighted, 0, data);                                                                      //*               Calculate sensor temperature             *\\
+                        data = func.sensorCalc(volt0Weighted, 1, data);                                                                      //*               Calculate sensor temperature             *\\
                                                                                                                                                                                                                                             //*                                                        *\\
                         textBox2.Text = data[1];                                                                                   //*           Store sensor temperature in textbox          *\\
                         tally += 1;                                                                                   //*            Store sensor temperature in array           *\\
                     }                                                                                                                       //*                                                        *\\
                     if (sensor2)                                                                                                            //*                    If sensor activate                  *\\
                     {                                                                                                                       //*                                                        *\\
-                        data = func.sensorCalc(volt0Weighted, 0, data);                                                                        //*               Calculate sensor temperature             *\\
+                        data = func.sensorCalc(volt0Weighted, 2, data);                                                                        //*               Calculate sensor temperature             *\\
                                                                                                                                                //double temp2 = 24.67488596;                                                                                                             //*                                                        *\\
                         textBox3.Text = data[2];                                                                                   //*           Store sensor temperature in textbox          *\\
                         tally += 1;                                                                                //*            Store sensor temperature in array           *\\
@@ -273,8 +273,8 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                        dOut.WriteData(0);
                        dOut.WriteData(1);
                     Console.WriteLine(temp);
-                    GUISettings(true, textBox5, "Fan");
-                    GUISettings(false, textBox4, "Heat");
+                    //GUISettings(true, textBox5, "Fan");
+                    //GUISettings(false, textBox4, "Heat");
                     //  textBox5.Text = "Fan On"; textBox4.Text = "Heater Off"; 
                     //textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.DarkSeaGreen;
                 }
@@ -283,8 +283,8 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                     dOut.WriteData(0);
                     dOut.WriteData(2);
                     Console.WriteLine(temp);
-                    GUISettings(false, textBox5, "Fan");
-                    GUISettings(true, textBox4, "Heat");
+                    //GUISettings(false, textBox5, "Fan");
+                    //GUISettings(true, textBox4, "Heat");
                     //  textBox5.Text = "Fan Off"; textBox4.Text = "Heater Off"; 
                     //textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;
                 }
@@ -292,8 +292,8 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                    {
                        dOut.WriteData(0);
                     Console.WriteLine(temp);
-                    GUISettings(false, textBox5, "Fan");
-                    GUISettings(false, textBox4, "Heaat");
+                    //GUISettings(false, textBox5, "Fan");
+                    //GUISettings(false, textBox4, "Heaat");
                     //textBox5.Text = "Fan On"; textBox4.Text = "Heater On"; 
                     //textBox4.BackColor = Color.DarkSeaGreen; textBox5.BackColor = Color.DarkSeaGreen;
                 }
@@ -301,8 +301,8 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                 if (!On)
                 {
                     dOut.WriteData(0);
-                    GUISettings(false, textBox5, "Fan");
-                    GUISettings(false, textBox4, "Heaat");
+                    //GUISettings(false, textBox5, "Fan");
+                    //GUISettings(false, textBox4, "Heaat");
                     //textBox5.Text = "Fan Off"; textBox4.Text = "Heater Off"; textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;
                 }
 
@@ -402,7 +402,7 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                 dOut.WriteData(0);
                 dOut.WriteData(1);                                                                                                                      //*                           Keep  fan on                             *\\
                 reseting = true;
-            GUISettings(true, textBox5, "Fan");  GUISettings(false, textBox4, "Heat");            //*                                                                    *\\
+            //GUISettings(true, textBox5, "Fan");  GUISettings(false, textBox4, "Heat");            //*                                                                    *\\
                // textBox5.Text = "Fan On"; textBox4.Text = "Heater Off"; textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.DarkSeaGreen;  //*         Change GUI to reflect status of the fan and heater         *\\
                                                                                                                                                       //*                                                                    *\\
                                                                                                                                                         //*                                                                    *\\                
@@ -423,7 +423,7 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
             else
             {
                 dOut.WriteData(0);                                                                                                                      //* When current temperature is below Room temperature, turn fan 'Off' *\\
-                GUISettings(false, textBox5, "Fan"); GUISettings(false, textBox4, "Heat");                                                                                                                                                                                                              // textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;                                                             //*                                                                    *\\
+                //GUISettings(false, textBox5, "Fan"); GUISettings(false, textBox4, "Heat");                                                                                                                                                                                                              // textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;                                                             //*                                                                    *\\
                 reseting = false;
             }
         }

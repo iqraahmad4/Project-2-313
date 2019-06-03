@@ -123,3 +123,20 @@ H:\313 Project version 2\Project-2-313-master\3.5versA2\3.5versA2\obj\x86\Debug\
 H:\313 Project version 2\Project-2-313-master\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csproj.CoreCompileInputs.cache
 H:\313 Project version 2\Project-2-313-master\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.exe
 H:\313 Project version 2\Project-2-313-master\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.pdb
+H:\Project-2-313\3-6-19\3.5versA2\3.5versA2\bin\x86\Debug\3.5versA2.exe
+H:\Project-2-313\3-6-19\3.5versA2\3.5versA2\bin\x86\Debug\3.5versA2.pdb
+H:\Project-2-313\3-6-19\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.Common.dll
+H:\Project-2-313\3-6-19\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.Common.Native.dll
+H:\Project-2-313\3-6-19\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.NiLmClientDLL.dll
+H:\Project-2-313\3-6-19\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.MStudioCLM.dll
+H:\Project-2-313\3-6-19\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.Common.xml
+H:\Project-2-313\3-6-19\3.5versA2\3.5versA2\bin\x86\Debug\NationalInstruments.DAQmx.xml
+H:\Project-2-313\3-6-19\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csprojResolveAssemblyReference.cache
+H:\Project-2-313\3-6-19\3.5versA2\3.5versA2\obj\x86\Debug\_3._5versA2.Form1.resources
+H:\Project-2-313\3-6-19\3.5versA2\3.5versA2\obj\x86\Debug\_3._5versA2.Form2.resources
+H:\Project-2-313\3-6-19\3.5versA2\3.5versA2\obj\x86\Debug\_3._5versA2.Form3.resources
+H:\Project-2-313\3-6-19\3.5versA2\3.5versA2\obj\x86\Debug\_3._5versA2.Properties.Resources.resources
+H:\Project-2-313\3-6-19\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csproj.GenerateResource.Cache
+H:\Project-2-313\3-6-19\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.csproj.CoreCompileInputs.cache
+H:\Project-2-313\3-6-19\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.exe
+H:\Project-2-313\3-6-19\3.5versA2\3.5versA2\obj\x86\Debug\3.5versA2.pdb

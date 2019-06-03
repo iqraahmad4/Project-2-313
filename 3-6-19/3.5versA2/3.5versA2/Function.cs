@@ -71,8 +71,10 @@ namespace _3._5versA2
 
         public string[] sensorCalc(double volt, int sensornumber, string[] data)                                            //*                                                           *\\
         {                                                                                                                   //*                                                           *\\
-            double temp = CalcTemp(0, volt);                                                                                //*                  Calculate sensor temperature             *\\                                                       
+            double temp = CalcTemp(sensornumber, volt);                                                                                //*                  Calculate sensor temperature             *\\                                                       
+         
             data[sensornumber] = temp.ToString();                                                                           //*               Store sensor temperature in array           *\\
+      
             return data;                                                                                                    //*                Return sensor temperature array            *\\
         }                                                                                                                   //*                                                           *\\
 
@@ -90,7 +92,11 @@ namespace _3._5versA2
                     data[i] = data[i].Substring(0, index + 5);                                                              //*          Contract data to upto 4 decimal places        *\\
                 }                                                                                                           //*                                                        *\\
             }                                                                                                               //*       Average temperature = sum of data divided by     *\\
-            double temp = (Convert.ToDouble(data[0]) + Convert.ToDouble(data[1]) + Convert.ToDouble(data[2])) / tally;      //*                 Number of active sensors               *\\
+
+
+          
+            double temp = (Convert.ToDouble(data[0]) + Convert.ToDouble(data[1]) + Convert.ToDouble(data[2])) / tally; //*                 Number of active sensors               *\\
+    
             return temp;                                                                                                    //*                Return average temperature              *\\
         }                                                                                                                   //*                                                        *\\
 
