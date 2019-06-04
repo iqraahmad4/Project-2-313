@@ -43,7 +43,7 @@ namespace _3._5versA2
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //ADD BUTTON
+            //REPLACE BUTTON
             //reads new coefficient entered
             
   
@@ -69,7 +69,7 @@ namespace _3._5versA2
                 reader.Close();
             } */
         }
-
+        /*
         private void button2_Click(object sender, EventArgs e)
         {
             //DELETE BUTTON
@@ -111,7 +111,8 @@ namespace _3._5versA2
             FileStream obj1 = new FileStream(uni_iqra_path, FileMode.Append);
             obj1.Close();
         }
-
+        */
+        /*
         private void button3_Click(object sender, EventArgs e)
         {
             //view button
@@ -122,7 +123,7 @@ namespace _3._5versA2
             }
 
         }
-
+        */
         private void button4_Click(object sender, EventArgs e)
         {
             FileInfo file = new FileInfo(filepath);

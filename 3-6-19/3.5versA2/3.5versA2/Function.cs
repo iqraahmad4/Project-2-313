@@ -85,7 +85,7 @@ namespace _3._5versA2
         {                                                                                                                   //*                                                           *\\
             using (System.IO.StreamReader parameters = new System.IO.StreamReader(filepath))                                //*            Read Filter Parameters from text file          *\\
             {                                                                                                               //*                                                           *\\
-                int lineCounter = 0;                                                                                        //*                                                           *\\
+                                                                                                     //*                                                           *\\
                 string line;                                                                                                //*                                                           *\\
                 while ((line = parameters.ReadLine()) != "Window Size: ")                                                              //*               Reading each line in text file              *\\
                 {
@@ -106,7 +106,7 @@ namespace _3._5versA2
         {                                                                                                                   //*                                                           *\\
             using (System.IO.StreamReader parameters = new System.IO.StreamReader(filepath))                                //*            Read Filter Parameters from text file          *\\
             {                                                                                                               //*                                                           *\\
-                int lineCounter = 0;                                                                                        //*                                                           *\\
+                                                                                                     //*                                                           *\\
                 string line;                                                                                                //*                                                           *\\
                 while ((line = parameters.ReadLine()) != "High Band: ")                                                              //*               Reading each line in text file              *\\
                 {
