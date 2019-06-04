@@ -69,7 +69,10 @@ int ticker = 0;
             input.ShowDialog();                        //*        for the temperature chamber            *\\
             dev = input.ReadDeviceNumber();            //*       Read Device Number from form            *\\
                                                           //\/\/\/\/\/\/\/\\ User Input //\/\/\/\/\/\/\//
-
+if (dev == "Nothing")
+            {
+                Form1.Form1_FormClosing();
+            }
                                                                                                                                                        //\/\/\/\/\/\/\/\/\/\/\// Initialization //\/\/\/\/\/\/\/\/\/\/\\
             InitializeComponent();                                                                                                                  //*                    Initializing all components                 *\\
                                                                                                                                                     //*               Opening Channels for Thermistor sensors          *\\
@@ -286,9 +289,6 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                 Console.Write(temp + " " + userTemp + " " + error);
                 double high =  0.1;
                 double low = - 0.1;
-
-
-
 
                 if (error > high)
                    {

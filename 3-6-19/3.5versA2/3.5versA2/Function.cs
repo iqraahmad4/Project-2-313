@@ -100,6 +100,48 @@ namespace _3._5versA2
             }                                                                                                               //*                                                           *\\
             return size;                                                                                                   //*                   Return coefficient array                *\\
         }
+
+
+        public int ReadHighBand(string filepath, int high)                                             //*                                                           *\\
+        {                                                                                                                   //*                                                           *\\
+            using (System.IO.StreamReader parameters = new System.IO.StreamReader(filepath))                                //*            Read Filter Parameters from text file          *\\
+            {                                                                                                               //*                                                           *\\
+                int lineCounter = 0;                                                                                        //*                                                           *\\
+                string line;                                                                                                //*                                                           *\\
+                while ((line = parameters.ReadLine()) != "High Band: ")                                                              //*               Reading each line in text file              *\\
+                {
+                    //*                                                           *\\
+                }
+                line = parameters.ReadLine();
+                //*                                                           *\\
+
+                high = Convert.ToInt32(line);                                                         //*   Enter each weight coefficient into Coefficient Array    *\\                                                             //*                                                           *\\
+                                                                                                      //*                                                           *\\
+                parameters.Close();                                                                                         //*                     Close parameter file                  *\\                                                                                         //*                                                           *\\
+            }                                                                                                               //*                                                           *\\
+            return high;                                                                                                   //*                   Return coefficient array                *\\
+        }
+
+        public int ReadLowBand(string filepath, int low)                                             //*                                                           *\\
+        {                                                                                                                   //*                                                           *\\
+            using (System.IO.StreamReader parameters = new System.IO.StreamReader(filepath))                                //*            Read Filter Parameters from text file          *\\
+            {                                                                                                               //*                                                           *\\
+                int lineCounter = 0;                                                                                        //*                                                           *\\
+                string line;                                                                                                //*                                                           *\\
+                while ((line = parameters.ReadLine()) != "Low Band: ")                                                              //*               Reading each line in text file              *\\
+                {
+                    //*                                                           *\\
+                }
+                line = parameters.ReadLine();
+                //*                                                           *\\
+
+                low = Convert.ToInt32(line);                                                         //*   Enter each weight coefficient into Coefficient Array    *\\                                                             //*                                                           *\\
+                                                                                                      //*                                                           *\\
+                parameters.Close();                                                                                         //*                     Close parameter file                  *\\                                                                                         //*                                                           *\\
+            }                                                                                                               //*                                                           *\\
+            return low;                                                                                                   //*                   Return coefficient array                *\\
+        }
+
         public string[] sensorCalc(double volt, int sensornumber, string[] data)                                            //*                                                           *\\
         {                                                                                                                   //*                                                           *\\
             double temp = CalcTemp(sensornumber, volt);                                                                                //*                  Calculate sensor temperature             *\\                                                       

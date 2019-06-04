@@ -11,15 +11,10 @@ namespace _3._5versA2
 {
     public partial class Form3 : Form
     {
-        string deviceNumber;
+        string deviceNumber="";
         public Form3()
         {
             InitializeComponent();
-        }
-
-        private void Form3_Load(object sender, EventArgs e)
-        {
-
         }
  
 
@@ -31,12 +26,26 @@ namespace _3._5versA2
         private void button1_Click_1(object sender, EventArgs e)
         {
             deviceNumber = textBox1.Text;
+            
             this.Hide();
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void Form3_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (deviceNumber == "") {
+                MessageBox.Show("Imbecile! You must enter the device number!","Enter Device Number", MessageBoxButtons.RetryCancel);
+                if(MessageBox.Show("Imbecile! You must enter the device number!","Enter Device Number", MessageBoxButtons.RetryCancel) == DialogResult.Retry)
+                {
 
+                    e.Cancel = true;
+                }
+                else
+                {
+
+                    deviceNumber= "Nothing";
+                }
+            }
+          
         }
     }
 }

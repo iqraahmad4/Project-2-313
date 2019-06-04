@@ -39,7 +39,7 @@
             // textBox1
             // 
             this.textBox1.Location = new System.Drawing.Point(29, 97);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(1);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(85, 20);
             this.textBox1.TabIndex = 0;
@@ -47,7 +47,7 @@
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(29, 131);
-            this.button1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.button1.Margin = new System.Windows.Forms.Padding(1);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(46, 26);
             this.button1.TabIndex = 1;
@@ -66,7 +66,6 @@
             this.label1.Text = "Please enter the device number";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.label1.UseMnemonic = false;
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // label2
             // 
@@ -116,7 +115,7 @@
             this.Controls.Add(this.textBox1);
             this.Name = "Form3";
             this.Text = "User Input";
-            this.Load += new System.EventHandler(this.Form3_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form3_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
