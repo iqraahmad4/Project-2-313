@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using NationalInstruments.DAQmx;
 using NationalInstruments;
+using System.Windows.Forms;
 
 namespace _3._5versA2
 {
     class Functions
     {
-        Task functions = new Task();                                                                                                
-                                                                                                                                       //*    Specifications for thermistors     *\\
+        Task functions = new Task();
+        //Form2 f2 = new Form2();                                                                                //*    Specifications for thermistors     *\\
                                                                                                                                        //*     [sensor 0, sensor1, sensor2]      *\\
         int[] r = { 10000, 5000, 100000 };                                                                                             //*     ~~ Resistance @ 25 degrees ~~     *\\
         int[] B = { 3380, 3960, 4380 };                                                                                                //*            ~~ B constant ~~           *\\
@@ -55,20 +56,50 @@ namespace _3._5versA2
                 public double[] ReadParameters(string filepath, double[] array)                                             //*                                                           *\\
         {                                                                                                                   //*                                                           *\\
             using (System.IO.StreamReader parameters = new System.IO.StreamReader(filepath))                                //*            Read Filter Parameters from text file          *\\
-            {                                                                                                               //*                                                           *\\
-                int lineCounter = 0;                                                                                        //*                                                           *\\
+            {                                                                                                               //*                                                           *\\                                                                                       //*                                                           *\\
                 string line;                                                                                                //*                                                           *\\
-                while ((line = parameters.ReadLine()) != null)                                                              //*               Reading each line in text file              *\\
-                {                                                                                                           //*                                                           *\\
-                    array[lineCounter] = Convert.ToDouble(line);                                                            //*   Enter each weight coefficient into Coefficient Array    *\\
-                    lineCounter++;                                                                                          //*                                                           *\\
+                while ((line = parameters.ReadLine()) != "Filter Coefficients: ")                                                              //*               Reading each line in text file              *\\
+                {
+                                                                                                      //*                                                           *\\
+                }
+             
+                int coeffCounter = 0;
+                while ((line = parameters.ReadLine()) != "")                                                              //*               Reading each line in text file              *\\
+                {
+                                                                                                                         //*                                                           *\\
+                    
+                        array[coeffCounter] = Convert.ToDouble(line);                                                         //*   Enter each weight coefficient into Coefficient Array    *\\
+
+
+                    coeffCounter++;
+                                                                                                   //*                                                           *\\
                 }                                                                                                           //*                                                           *\\
                 parameters.Close();                                                                                         //*                     Close parameter file                  *\\
-                lineCounter = 0;                                                                                            //*                                                           *\\
+                coeffCounter = 0;
+                                                                                              //*                                                           *\\
             }                                                                                                               //*                                                           *\\
             return array;                                                                                                   //*                   Return coefficient array                *\\
         }                                                                                                                   //*                                                           *\\
 
+        public int ReadWindowSize(string filepath, int size)                                             //*                                                           *\\
+        {                                                                                                                   //*                                                           *\\
+            using (System.IO.StreamReader parameters = new System.IO.StreamReader(filepath))                                //*            Read Filter Parameters from text file          *\\
+            {                                                                                                               //*                                                           *\\
+                int lineCounter = 0;                                                                                        //*                                                           *\\
+                string line;                                                                                                //*                                                           *\\
+                while ((line = parameters.ReadLine()) != "Window Size: ")                                                              //*               Reading each line in text file              *\\
+                {
+                                                                                                    //*                                                           *\\
+                }
+                line = parameters.ReadLine();
+                    //*                                                           *\\
+
+                    size = Convert.ToInt32(line);                                                         //*   Enter each weight coefficient into Coefficient Array    *\\                                                             //*                                                           *\\
+                                                                                                                       //*                                                           *\\
+                parameters.Close();                                                                                         //*                     Close parameter file                  *\\                                                                                         //*                                                           *\\
+            }                                                                                                               //*                                                           *\\
+            return size;                                                                                                   //*                   Return coefficient array                *\\
+        }
         public string[] sensorCalc(double volt, int sensornumber, string[] data)                                            //*                                                           *\\
         {                                                                                                                   //*                                                           *\\
             double temp = CalcTemp(sensornumber, volt);                                                                                //*                  Calculate sensor temperature             *\\                                                       
@@ -166,23 +197,23 @@ namespace _3._5versA2
             {
                 if (count == 2 || count == 3 || count == 11)
                 {
-                    message = ("You may proceed.");
+                    MessageBox.Show("You may proceed.");
                 }
                 else if (count == 4 || count == 12)
                 {
-                    message = ("I hope you are satisfied, it's cool now");
+                    MessageBox.Show("I hope you are satisfied, it's cool now");
                 }
                 else if (count == 5 || count == 13)
                 {
-                    message = ("My gosh that was stressful! You may continue now.");
+                    MessageBox.Show("My gosh that was stressful! You may continue now.");
                 }
                 else if (count== 6 || count == 7 || count == 8 || count == 9)
                 {
-                    message = ("Forget this, I'm out!");
+                    MessageBox.Show("Forget this, I'm out!");
                 }
                 else if (count == 10 || count == 14)
                 {
-                    message = ("Well, despite you're quirks, it was most fun chatting with you. Goodbye.");
+                    MessageBox.Show("Well, despite you're quirks, it was most fun chatting with you. Goodbye.");
                 }
             }
             return message;

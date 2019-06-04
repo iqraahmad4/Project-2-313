@@ -12,11 +12,28 @@ using System.IO;
 
 namespace _3._5versA2
 {
+
     public partial class Form2 : Form
     {
+        string filepath = @"H:\Project-2-313\3-6-19\3.5versA2\Parameters.txt";
+        Functions func = new Functions();
+        double[] coefficentArray = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
         public Form2()
         {
             InitializeComponent();
+            coefficentArray = (func.ReadParameters(filepath, coefficentArray));
+            listBox1.Items.AddRange(new object[] { coefficentArray[0], coefficentArray[1], coefficentArray[2], coefficentArray[3], coefficentArray[4], coefficentArray[5]});
+            int items = listBox1.Items.Count;
+
+            if (listBox1.Items.Count < 6)
+            {
+                for (int i = 0; i < 6 - items; i++)
+                {
+                    Console.WriteLine(i);
+                    listBox1.Items.Add(0);
+               
+                }
+            }
         }
 
         private void Form2_Load(object sender, EventArgs e)
@@ -27,12 +44,19 @@ namespace _3._5versA2
         private void button1_Click(object sender, EventArgs e)
         {
             //ADD BUTTON
-            // File Info
-            FileInfo file = new FileInfo(@"H:\Project-2-313\3.5versA2\Parameters.txt");
+            //reads new coefficient entered
+            
+  
+            int selectedIndex = listBox1.SelectedIndex;
+            string newCoeff = textBox1.Text;
+            listBox1.Items[selectedIndex] = newCoeff;
+            Console.WriteLine(listBox1.Items[selectedIndex]);
+          /*  // File Info
+            FileInfo file = new FileInfo(@filepath);
             //write line using streamwriter
             using(StreamWriter writer = file.AppendText())
             {
-                writer.WriteLine(textBox1.Text);
+                writer.WriteLine(newCoeff);
             }
             // Read the content using streamreader from text file
             using(StreamReader reader = file.OpenText())
@@ -43,17 +67,17 @@ namespace _3._5versA2
                     listBox1.Text = l; //display line added
                 }
                 reader.Close();
-            }
+            } */
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             //DELETE BUTTON
-            string uni_iqra_path = @"H:\Project-2-313\3.5versA2\Parameters.txt";
+            string uni_iqra_path = filepath;
             string p_to_be_deleted = Convert.ToString(listBox1.SelectedItem);
-            var oldLines = System.IO.File.ReadAllLines(uni_iqra_path);
+            var oldLines = System.IO.File.ReadAllLines(filepath);
             string[] newLines={"","","","","",""};
-            using (System.IO.StreamReader para = new System.IO.StreamReader(@"H:\Project-2-313\3.5versA2\Parameters.txt"))
+            using (System.IO.StreamReader para = new System.IO.StreamReader(filepath))
             {
 
                 int counter = 0;
@@ -69,12 +93,12 @@ namespace _3._5versA2
                 para.Close();
                 counter = 0;
             }
-            System.IO.File.WriteAllLines(uni_iqra_path,newLines);
-            FileStream obj = new FileStream(uni_iqra_path, FileMode.Append);
+            System.IO.File.WriteAllLines(filepath,newLines);
+            FileStream obj = new FileStream(filepath, FileMode.Append);
             obj.Close();
 
             // once deleted the selected line and once again read the text file and diplay the new text file in listBox  
-            FileInfo fi = new FileInfo(@"H:\Project-2-313\3.5versA2\Parameters.txt");
+            FileInfo fi = new FileInfo(filepath);
             using (StreamReader sr = fi.OpenText())
             {
                 string s = "";
@@ -91,7 +115,7 @@ namespace _3._5versA2
         private void button3_Click(object sender, EventArgs e)
         {
             //view button
-            string[] lines = System.IO.File.ReadAllLines(@"H:\Project-2-313\3.5versA2\Parameters.txt");
+            string[] lines = System.IO.File.ReadAllLines(filepath);
             foreach (string v in lines) // Read all line from the text file  
             {
                 listBox1.Items.Add(v);
@@ -101,12 +125,26 @@ namespace _3._5versA2
 
         private void button4_Click(object sender, EventArgs e)
         {
+            FileInfo file = new FileInfo(filepath);
+            //write line using streamwriter
+            using (StreamWriter writer = new StreamWriter(filepath, false))
+            {
+                for (int i = 0; i <6; i++)
+                {
+                    writer.WriteLine(listBox1.Items[i]);
+                }
+            }
             this.Hide();
         }
 
         private void label1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void listBox1_SelectedValueChanged(object sender, EventArgs e)
+        {
+            //replace changed value
         }
     }
 }

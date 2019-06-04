@@ -288,6 +288,8 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                 double low = - 0.1;
 
 
+
+
                 if (error > high)
                    {
                        dOut.WriteData(0);
