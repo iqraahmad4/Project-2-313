@@ -24,16 +24,27 @@ namespace _3._5versA2
        */                                                                                                                   
         public double ReadTemperaturet(AnalogI aIn, List<double> coefficients, int windowSize)                                                  //*                                                           *\\
         {                                                                                                                   //*                                                           *\\
+            
             double voltWeighted = 0;                                                                                        //*                                                           *\\
-            List <double> volt = aIn.ReadData(windowSize);                                                                                 //*       Read Rolled Average Voltages from Analog File       *\\
+            List<double> volt = new List<double>();
+            volt= aIn.ReadData(windowSize);   
+            
+            //*       Read Rolled Average Voltages from Analog File       *\\
             for (int i = 0; i < 11-windowSize; i++)                                                                                     //*        For each element in the Rolled Voltage Array       *\\
             {                                                                                                               //*                                                           *\\
-                volt[i] = volt[i] * coefficients[i];                                                                        //* Multiply average wth the corresponding weight coefficient *\\
-                voltWeighted += volt[i];
-                /*Console.WriteLine("volt[i] " + volt[i]);                                                                    //*              Sum up weighted voltage averages             *\\
-                Console.WriteLine("coefficients[i] " + coefficients[i]);
-                Console.WriteLine("voltWeighted " + voltWeighted);*/
-            }                                                                                                               //*                                                           *\\
+                Console.WriteLine("volt[i] before " + volt.ElementAt(i));
+                double v_temp = volt.ElementAt(i);
+                double c_temp = coefficients.ElementAt(i);
+                double value = v_temp * c_temp;
+                Console.WriteLine("value "+value);
+                    //* Multiply average wth the corresponding weight coefficient *\\
+                voltWeighted += value;
+                Console.WriteLine("coeff: " + coefficients[i]);
+                Console.WriteLine("volt[i] after " + volt[i]);                                                                    //*              Sum up weighted voltage averages             *\\
+              //  Console.WriteLine("coefficients[i] " + coefficients[i]);
+                //Console.WriteLine("voltWeighted " + voltWeighted);
+            }
+            Console.WriteLine("voltweighted " + voltWeighted);//*                                                           *\\
             return voltWeighted;                                                                                            //*              Return weighted voltage average              *\\
         }                                                                                                                   //*                                                           *\\
         /*                                                                                                                
@@ -53,7 +64,8 @@ namespace _3._5versA2
         {                                                                                                                   //*           Substitute all variables into equation          *\\
             double temp = B[sensorNumber] / (Math.Log((r[sensorNumber] * (volt / (5 - volt))) /                             //*                                                           *\\
                 (r[sensorNumber] * Math.Exp(-B[sensorNumber] / 298.15))));                                                  //*                                                           *\\
-            temp = temp - 273.15;                                                                                           //*         Convert from Kelvin to Celcius: C=K-273.15        *\\
+            temp = temp - 273.15;
+            Console.WriteLine("temp: " + temp);//*         Convert from Kelvin to Celcius: C=K-273.15        *\\
             return temp;                                                                                                    //*                                                           *\\
         }                                                                                                                   //*                                                           *\\
         public List<double> ReadParameters(string filepath)                                             //*                                                           *\\
@@ -198,7 +210,7 @@ namespace _3._5versA2
             if (resetting) {                                                                                                //*    to close the form while the chamber is cooling.     *\\
                 if (count == 1)                                                                                             //*                                                        *\\
                 {                                                                                                           //*                                                        *\\
-                    message = "Wait! Chamberreturn  is cooling!";                                                           //*                                                        *\\
+                    message = "Wait! Chamber  is cooling!";                                                           //*                                                        *\\
                 }                                                                                                           //*                                                        *\\
                 else if (count == 2)                                                                                        //*                                                        *\\
                 {                                                                                                           //*                                                        *\\
