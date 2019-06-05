@@ -15,7 +15,7 @@ namespace _3._5versA2
         int samplesPerChannel = 11;
         int sampleIndex = 0;
         double summedSamples=0;
-        double[] samplesAvg = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+        List<double> samplesAvg = new List<double>();
         //double[] samplesAvg = new double[4];
 
 
@@ -43,7 +43,7 @@ namespace _3._5versA2
             return txtbox;
         }
 
-        public double[] ReadData()
+        public List<double> ReadData(int window)
         {
             data = reader.ReadWaveform(samplesPerChannel);
             //digital filter shit you take 10 samples then staring fro first sample you take the next 4 samples(5 in total ) and calculate the average-> 1+2+3+4+5/5
@@ -54,17 +54,19 @@ namespace _3._5versA2
 
             //here we return the 5 averaged samples and later we convert them
 
+            //num of coeff =sample size+1-window size
             //first check if index has enough samples to continue
-            for (int i = 0; i < 6; i++)
+            int numAvgs = samplesPerChannel - window;
+            for (int i = 0; i < numAvgs; i++)
                 {
                 summedSamples = 0;
 
-                for (int j = i; j < (i + 5); j++) 
+                for (int j = i; j < (i+window-1); j++) 
                 {
                     summedSamples += data.Samples[j].Value;
                 }
 
-                samplesAvg[i] = summedSamples / 5;
+                samplesAvg.Add(summedSamples / (numAvgs-1));
             }
            // Console.WriteLine(samplesAvg[0] + " "+samplesAvg[1]+" "+ samplesAvg[2] + " "+samplesAvg[3] + " "+samplesAvg[4] + " " + samplesAvg[5]);
              //  samplesAvg =  { 26.0; 26.0; 26.0; 26.0; 26.0; };

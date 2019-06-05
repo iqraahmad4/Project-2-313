@@ -1,6 +1,16 @@
+Filter Coefficients: 
 0
 0
-0
+0.5
 0
 0.1
 0.9
+
+Window Size: 
+5
+
+High Band: 
+0.1
+
+Low Band: 
+0.1

@@ -22,14 +22,17 @@ namespace _3._5versA2
            Input: aIn ~ Analog Channel for Sensor.                                                                          
            Output: voltWeighted ~  Weighted Aaverage Voltage.                                                               
        */                                                                                                                   
-        public double ReadTemperaturet(AnalogI aIn, double[] coefficients)                                                  //*                                                           *\\
+        public double ReadTemperaturet(AnalogI aIn, List<double> coefficients, int windowSize)                                                  //*                                                           *\\
         {                                                                                                                   //*                                                           *\\
             double voltWeighted = 0;                                                                                        //*                                                           *\\
-            double[] volt = aIn.ReadData();                                                                                 //*       Read Rolled Average Voltages from Analog File       *\\
-            for (int i = 0; i < 6; i++)                                                                                     //*        For each element in the Rolled Voltage Array       *\\
+            List <double> volt = aIn.ReadData(windowSize);                                                                                 //*       Read Rolled Average Voltages from Analog File       *\\
+            for (int i = 0; i < 11-windowSize; i++)                                                                                     //*        For each element in the Rolled Voltage Array       *\\
             {                                                                                                               //*                                                           *\\
                 volt[i] = volt[i] * coefficients[i];                                                                        //* Multiply average wth the corresponding weight coefficient *\\
-                voltWeighted += volt[i];                                                                                    //*              Sum up weighted voltage averages             *\\
+                voltWeighted += volt[i];
+                /*Console.WriteLine("volt[i] " + volt[i]);                                                                    //*              Sum up weighted voltage averages             *\\
+                Console.WriteLine("coefficients[i] " + coefficients[i]);
+                Console.WriteLine("voltWeighted " + voltWeighted);*/
             }                                                                                                               //*                                                           *\\
             return voltWeighted;                                                                                            //*              Return weighted voltage average              *\\
         }                                                                                                                   //*                                                           *\\
@@ -53,36 +56,33 @@ namespace _3._5versA2
             temp = temp - 273.15;                                                                                           //*         Convert from Kelvin to Celcius: C=K-273.15        *\\
             return temp;                                                                                                    //*                                                           *\\
         }                                                                                                                   //*                                                           *\\
-                public double[] ReadParameters(string filepath, double[] array)                                             //*                                                           *\\
+        public List<double> ReadParameters(string filepath)                                             //*                                                           *\\
         {                                                                                                                   //*                                                           *\\
+            List<double> array = new List<double>();
             using (System.IO.StreamReader parameters = new System.IO.StreamReader(filepath))                                //*            Read Filter Parameters from text file          *\\
             {                                                                                                               //*                                                           *\\                                                                                       //*                                                           *\\
                 string line;                                                                                                //*                                                           *\\
                 while ((line = parameters.ReadLine()) != "Filter Coefficients: ")                                                              //*               Reading each line in text file              *\\
                 {
-                                                                                                      //*                                                           *\\
+                    //*                                                           *\\
                 }
-             
-                int coeffCounter = 0;
+
+
                 while ((line = parameters.ReadLine()) != "")                                                              //*               Reading each line in text file              *\\
                 {
-                                                                                                                         //*                                                           *\\
-                    
-                        array[coeffCounter] = Convert.ToDouble(line);                                                         //*   Enter each weight coefficient into Coefficient Array    *\\
 
+                    array.Add(Convert.ToDouble(line));                                                         //*   Enter each weight coefficient into Coefficient Array    *\\                                                                               //*                                                           *\\
 
-                    coeffCounter++;
-                                                                                                   //*                                                           *\\
-                }                                                                                                           //*                                                           *\\
-                parameters.Close();                                                                                         //*                     Close parameter file                  *\\
-                coeffCounter = 0;
-                                                                                              //*                                                           *\\
-            }                                                                                                               //*                                                           *\\
+                }        //*                                                           *\\
+                parameters.Close();                                                                                         //*                     Close parameter file                  *\\     
+               
+            }                                                                                                           //*                                                           *\\
             return array;                                                                                                   //*                   Return coefficient array                *\\
         }                                                                                                                   //*                                                           *\\
 
-        public int ReadWindowSize(string filepath, int size)                                             //*                                                           *\\
-        {                                                                                                                   //*                                                           *\\
+        public int ReadWindowSize(string filepath)                                             //*                                                           *\\
+        {
+            int size;//*                                                           *\\
             using (System.IO.StreamReader parameters = new System.IO.StreamReader(filepath))                                //*            Read Filter Parameters from text file          *\\
             {                                                                                                               //*                                                           *\\
                                                                                                      //*                                                           *\\
@@ -102,8 +102,9 @@ namespace _3._5versA2
         }
 
 
-        public int ReadHighBand(string filepath, int high)                                             //*                                                           *\\
-        {                                                                                                                   //*                                                           *\\
+        public double ReadHighBand(string filepath)                                             //*                                                           *\\
+        {
+            double high;//*                                                           *\\
             using (System.IO.StreamReader parameters = new System.IO.StreamReader(filepath))                                //*            Read Filter Parameters from text file          *\\
             {                                                                                                               //*                                                           *\\
                                                                                                      //*                                                           *\\
@@ -115,15 +116,16 @@ namespace _3._5versA2
                 line = parameters.ReadLine();
                 //*                                                           *\\
 
-                high = Convert.ToInt32(line);                                                         //*   Enter each weight coefficient into Coefficient Array    *\\                                                             //*                                                           *\\
+                high = Convert.ToDouble(line);                                                         //*   Enter each weight coefficient into Coefficient Array    *\\                                                             //*                                                           *\\
                                                                                                       //*                                                           *\\
                 parameters.Close();                                                                                         //*                     Close parameter file                  *\\                                                                                         //*                                                           *\\
             }                                                                                                               //*                                                           *\\
             return high;                                                                                                   //*                   Return coefficient array                *\\
         }
 
-        public int ReadLowBand(string filepath, int low)                                             //*                                                           *\\
+        public double ReadLowBand(string filepath)                                             //*                                                           *\\
         {                                                                                                                   //*                                                           *\\
+            double low;
             using (System.IO.StreamReader parameters = new System.IO.StreamReader(filepath))                                //*            Read Filter Parameters from text file          *\\
             {                                                                                                               //*                                                           *\\
                 int lineCounter = 0;                                                                                        //*                                                           *\\
@@ -135,7 +137,7 @@ namespace _3._5versA2
                 line = parameters.ReadLine();
                 //*                                                           *\\
 
-                low = Convert.ToInt32(line);                                                         //*   Enter each weight coefficient into Coefficient Array    *\\                                                             //*                                                           *\\
+                low = Convert.ToDouble(line);                                                         //*   Enter each weight coefficient into Coefficient Array    *\\                                                             //*                                                           *\\
                                                                                                       //*                                                           *\\
                 parameters.Close();                                                                                         //*                     Close parameter file                  *\\                                                                                         //*                                                           *\\
             }                                                                                                               //*                                                           *\\
@@ -161,8 +163,11 @@ namespace _3._5versA2
                 }                                                                                                           //*                                                        *\\
                 else                                                                                                        //*                                                        *\\
                 {                                                                                                           //*                                                        *\\
-                    int index = data[i].LastIndexOf(".");                                                                   //*                                                        *\\
-                    data[i] = data[i].Substring(0, index + 5);                                                              //*          Contract data to upto 4 decimal places        *\\
+                    int index = data[i].LastIndexOf(".");
+                    if (data[i].ToString().Length - data[i].ToString().IndexOf(".") - 1 > 5)
+                    {//*                                                        *\\
+                        data[i] = data[i].Substring(0, index + 5);
+                    }//*          Contract data to upto 4 decimal places        *\\
                 }                                                                                                           //*                                                        *\\
             }                                                                                                               //*       Average temperature = sum of data divided by     *\\
 

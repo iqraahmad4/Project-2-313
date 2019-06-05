@@ -17,7 +17,11 @@ namespace _3._5versA2
 {
     public partial class Form1 : Form
     {                                                                           //\/\/\// Global Variables //\/\/\/\//
-        double[] coefficentArray = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };        //*            Filter Parameters          *\\
+        List <double> coefficients = new List <double>();
+        //double[] coefficents= { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0,0.0,0.0 ,0.0};        //*            Filter Parameters          *\\
+        int windowSize=0;
+        double High=0;
+        double Low=0;
         double userTemp;                                                    //*           Desired Temperature         *\\
         double temp;                                                        //*           Current Temperature         *\\
         double roomTemp;                                                    //*        Initial Room Temperature       *\\
@@ -68,37 +72,52 @@ int ticker = 0;
             Form3 input = new Form3();                 //*   Open User Form to input the device number   *\\
             input.ShowDialog();                        //*        for the temperature chamber            *\\
             dev = input.ReadDeviceNumber();            //*       Read Device Number from form            *\\
-                                                          //\/\/\/\/\/\/\/\\ User Input //\/\/\/\/\/\/\//
-if (dev == "Nothing")
-            {
-                Form1.Form1_FormClosing();
-            }
-                                                                                                                                                       //\/\/\/\/\/\/\/\/\/\/\// Initialization //\/\/\/\/\/\/\/\/\/\/\\
+                                                       //\/\/\/\/\/\/\/\\ User Input //\/\/\/\/\/\/\//
+                                                                                                                                               //\/\/\/\/\/\/\/\/\/\/\// Initialization //\/\/\/\/\/\/\/\/\/\/\\
             InitializeComponent();                                                                                                                  //*                    Initializing all components                 *\\
-                                                                                                                                                    //*               Opening Channels for Thermistor sensors          *\\
-            aIn0.OpenChannel("0", "Ainport0",dev);                                                                                                  //*                          Sensor 0 Channel                      *\\
-            aIn1.OpenChannel("1", "Ainport1",dev);                                                                                                  //*                          Sensor 1 Channel                      *\\
-            aIn2.OpenChannel("2", "Ainport2",dev);                                                                                                  //*                          Sensor 2 Channel                      *\\        
-            dOut.OpenChannel(dev);                                                                                                                  //*                        Open Digital Channel                    *\\
-            On = false;
-            //*                                                                 *\\
-          
-            //*                    Set System initially to 'Off'               *\\
-            //*                                                                *\\
-            dOut.WriteData(0);                                                                                                                      //*                Set Fan and Heater initally to  'Off'           *\\  
-            GUISettings(false, textBox5, "Fan"); GUISettings(false, textBox4, "Heat");                                                              //*        Change GUI to reflect status of the fan and heater      *\\
-   clicked = false; clicked6 = false;                                                                                                      //*                                                                *\\
-            sensor0 = true; sensor1 = true; sensor2 = true;                                                                                         //*                   Set all sensors initally to 'On'             *\\
-            coefficentArray = func.ReadParameters(ParameterPath, coefficentArray);                                                                                    //*                Read Filter Parameters from text file           *\\
-                                                                                                                                                                      //*                                                                *\\
-                                                                                                                                                                      //*                  Calculate Room Temperature                    *\\
-            roomTemp = 25.0;//  (func.CalcTemp(0, func.ReadTemperaturet(aIn0, coefficentArray)) + 
-                //func.CalcTemp(1, func.ReadTemperaturet(aIn1,coefficentArray)) + 
-                //func.CalcTemp(2, func.ReadTemperaturet(aIn2,coefficentArray))) / 3;                                                                 //*                                                                *\\
-            userTemp = Convert.ToDouble(numericUpDown1.Value) + roomTemp;                                                                           //* Set desired temperature as User Input (2-5) + room temperature *\\
-            textBox7.Text = userTemp.ToString(); Console.WriteLine("RT: " + roomTemp);                                                              //*                                                                *\\
-        }                                                                                                                                           //*                                                                *\\
-        private void GUISettings(bool Item, TextBox textbox, string item)
+            
+            try
+            {
+                //*               Opening Channels for Thermistor sensors          *\\
+                aIn0.OpenChannel("0", "Ainport0", dev);                                                                                                  //*                          Sensor 0 Channel                      *\\
+                aIn1.OpenChannel("1", "Ainport1", dev);                                                                                                  //*                          Sensor 1 Channel                      *\\
+                aIn2.OpenChannel("2", "Ainport2", dev);                                                                                                  //*                          Sensor 2 Channel                      *\\        
+                dOut.OpenChannel(dev);                                                                                                                  //*                        Open Digital Channel                    *\\
+                On = false;
+                //*                                                                 *\\
+
+                //*                    Set System initially to 'Off'               *\\
+                //*                                                                *\\
+                dOut.WriteData(0);                                                                                                                      //*                Set Fan and Heater initally to  'Off'           *\\  
+                GUISettings(false, textBox5, "Fan"); GUISettings(false, textBox4, "Heat");                                                              //*        Change GUI to reflect status of the fan and heater      *\\
+                clicked = false; clicked6 = false;                                                                                                      //*                                                                *\\
+                sensor0 = true; sensor1 = true; sensor2 = true;                                                                                         //*                   Set all sensors initally to 'On'             *\\
+                coefficients = func.ReadParameters(ParameterPath);                                                                                    //*                Read Filter Parameters from text file           *\\
+                windowSize = func.ReadWindowSize(ParameterPath);
+                High = func.ReadHighBand(ParameterPath);
+                Low = func.ReadLowBand(ParameterPath);
+
+                                                                                                                                                                          //*                                                                *\\
+                                                                                                                                                                          //*                  Calculate Room Temperature                    *\\
+                roomTemp =   (func.CalcTemp(0, func.ReadTemperaturet(aIn0, coefficients, windowSize)) + 
+                                func.CalcTemp(1, func.ReadTemperaturet(aIn1,coefficients, windowSize)) + 
+                                func.CalcTemp(2, func.ReadTemperaturet(aIn2,coefficients, windowSize))) / 3;                                                                 //*                                                                *\\
+                userTemp = Convert.ToDouble(numericUpDown1.Value) + roomTemp;                                                                           //* Set desired temperature as User Input (2-5) + room temperature *\\
+                textBox7.Text = userTemp.ToString(); Console.WriteLine("RT: " + roomTemp);                                                              //*                                                                *\\
+
+            }
+            catch (NationalInstruments.DAQmx.DaqException){
+                if (dev == "Nothing")
+                {
+                    Form1_Load(this, null);
+                    this.Close();
+
+                }
+            }
+
+        }    
+                        //*                                                                *\\
+    private void GUISettings(bool Item, TextBox textbox, string item)
         {
 
             if (textbox.InvokeRequired)
@@ -127,7 +146,19 @@ if (dev == "Nothing")
                     textbox.Text = item + " Off"; textbox.BackColor = Color.Firebrick;
                 }
             }
-        }                                                                                                                                     //\/\/\/\/\/\/\/\/\/\/\// Initialization //\/\/\/\/\/\/\/\/\/\/\\
+        }                
+
+        public void SetParameters(List<double>cs, int wind, double Hi, double Lo)
+        {
+            this.coefficients = cs;
+            this.windowSize = wind; this.High = Hi; this.Low = Lo;
+            for (int i=0; i<coefficients.Count; i++)
+            {
+                Console.Write(" " + coefficients[i]);
+            }
+            Console.WriteLine(" window: " + windowSize + " high: " + High + " Low: " + Low);
+        }
+                                                                                                                                                    //\/\/\/\/\/\/\/\/\/\/\// Initialization //\/\/\/\/\/\/\/\/\/\/\\
                                                                                                                                               /*
                                                                                                                                               Button 1: Turn System On/Off
                                                                                                                                               Turns system on and off. Bool 'On' toggles between true/false when button is pressed 
@@ -145,7 +176,7 @@ if (dev == "Nothing")
                                                                                                                                                             //*                                                                    *\\                     
             if (On)                                                                                                                                         //*                       If turning the system on                     *\\
             {                                                                                                                                               //*                                                                    *\\
-                coefficentArray = func.ReadParameters(ParameterPath, coefficentArray);                                                                                    //*                Read Filter Parameters from text file           *\\   
+                //coefficients = func.ReadParameters(ParameterPath, coefficients);                                                                                    //*                Read Filter Parameters from text file           *\\   
                 backgroundWorker1.RunWorkerAsync();                                                                                                     //*                                                                    *\\
             }                                                                                                                                               //*                                                                    *\\
             else                                                                                                                                            //*                      If turning the system off                     *\\
@@ -172,9 +203,9 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
         private void timer1_Tick(object sender, EventArgs e)                                                                                //*                                                        *\\
         {                                                                                                                                   //*                                                        *\\
                                                                                                                                             //*    Change GUI to reflect status of the fan and heater  *\\
-            volt0Weighted = func.ReadTemperaturet(aIn0,coefficentArray);
-            volt1Weighted = func.ReadTemperaturet(aIn1,coefficentArray);
-            volt2Weighted = func.ReadTemperaturet(aIn2,coefficentArray);          //*     Get weighted average of voltage for each sensor    *\\
+            volt0Weighted = func.ReadTemperaturet(aIn0,coefficients, windowSize);
+            volt1Weighted = func.ReadTemperaturet(aIn1,coefficients, windowSize);
+            volt2Weighted = func.ReadTemperaturet(aIn2,coefficients, windowSize);          //*     Get weighted average of voltage for each sensor    *\\
             if (On || reseting||clicked||!clicked)                                                                                                    //*                     If system is on                    *\\
             {                                                                                                                               //*                                                        *\\                                                                                                                            //*                                                        *\\
                 timerticks += 1;                                                                                                            //*                  Increment timerticks                  *\\
@@ -277,8 +308,14 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
 
         private void button7_Click(object sender, EventArgs e)
         {
-            Form2 popup = new Form2();
+            Form2 popup = new Form2(this, coefficients, windowSize, High, Low);
             popup.Show();
+
+            //coefficients = popup.GetNewCoeff();
+            //windowSize = popup.GetNewWindow();
+            //High = popup.GetNewHigh();
+            //Low = popup.GetNewLow();
+
         }
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
@@ -400,15 +437,19 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            closingcount += 1;
-            MessageBox.Show(func.ClosingForm1(reseting, closingcount));
-            if (reseting)
+            if (dev != "Nothing")
             {
-                e.Cancel = true;
-            }
-            else
-            {
-                e.Cancel = false;
+                closingcount += 1;
+                MessageBox.Show(func.ClosingForm1(reseting, closingcount));
+                if (reseting)
+                {
+                    e.Cancel = true;
+                }
+                else
+                {
+                    e.Cancel = false;
+                }
+                
             }
 
         }
@@ -435,9 +476,9 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
 
         private void backgroundWorker3_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            temp = (func.CalcTemp(0, func.ReadTemperaturet(aIn0, coefficentArray)) + 
-                func.CalcTemp(1, func.ReadTemperaturet(aIn1,coefficentArray)) + 
-                func.CalcTemp(2, func.ReadTemperaturet(aIn2, coefficentArray))) / 3;
+            temp = (func.CalcTemp(0, func.ReadTemperaturet(aIn0, coefficients, windowSize)) + 
+                func.CalcTemp(1, func.ReadTemperaturet(aIn1,coefficients, windowSize)) + 
+                func.CalcTemp(2, func.ReadTemperaturet(aIn2, coefficients, windowSize))) / 3;
             if (temp > roomTemp)
             {
                 backgroundWorker3.RunWorkerAsync();
@@ -448,6 +489,11 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                 GUISettings(false, textBox5, "Fan"); GUISettings(false, textBox4, "Heat");                                                                                                                                                                                                              // textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;                                                             //*                                                                    *\\
                 reseting = false;
             }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
