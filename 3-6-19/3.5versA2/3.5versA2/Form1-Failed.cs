@@ -17,32 +17,36 @@ namespace _3._5versA2
 {
     public partial class Form1 : Form
     {                                                                           //\/\/\// Global Variables //\/\/\/\//
-        List <double> coefficients = new List <double>();
-        //double[] coefficents= { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0,0.0,0.0 ,0.0};        //*            Filter Parameters          *\\
-        int windowSize=0;
-        double High=0;
-        double Low=0;
-        double userTemp;                                                    //*           Desired Temperature         *\\
-        double temp;                                                        //*           Current Temperature         *\\
-        double roomTemp;                                                    //*        Initial Room Temperature       *\\
-        double volt0Weighted = 0;                                           //*       Filtered Voltage: Sensor 0      *\\
-        double volt1Weighted = 0;                                           //*       Filtered Voltage: Sensor 1      *\\
-        double volt2Weighted = 0;                                           //*       Filtered Voltage: Sensor 2      *\\
-        bool On;                                                            //*               System On/Off           *\\                    
-        bool sensor0;                                                       //*              Sensor 0 On/Off          *\\
-        bool sensor1;                                                       //*              Sensor 1 On/Off          *\\
-        bool sensor2;                                                       //*              Sensor 2 On/Off          *\\
-        string dev;                                                        //*               Device Number           *\\     
-                                                                            //*      Channels for each thermistor     *\\
-        AnalogI aIn0 = new AnalogI();                                       //*             Sensor 0 Channel          *\\
-        AnalogI aIn1 = new AnalogI();                                       //*             Sensor 1 Channel          *\\
-        AnalogI aIn2 = new AnalogI();                                       //*             Sensor 2 Channel          *\\
                                                                             //*    Specifications for thermistors     *\\
                                                                             //*     [sensor 0, sensor1, sensor2]      *\\
         int[] r = { 10000, 5000, 100000 };                                  //*     ~~ Resistance @ 25 degrees ~~     *\\
         int[] B = { 3380, 3960, 4380 };                                     //*            ~~ B constant ~~           *\\
         int count = 0;                                                      //*       Data Collected Counter          *\\
         int timerticks = 0;                                                 //*              Timer Counter            *\\
+        int windowSize=0;                                                   //*               Window Size             *\\
+
+        double High=0;                                                      //*          Controller High Band         *\\
+        double Low=0;                                                       //*           Controller Low Band         *\\
+        double userTemp;                                                    //*           Desired Temperature         *\\
+        double temp;                                                        //*           Current Temperature         *\\
+        double roomTemp;                                                    //*        Initial Room Temperature       *\\
+        double volt0Weighted = 0;                                           //*       Filtered Voltage: Sensor 0      *\\
+        double volt1Weighted = 0;                                           //*       Filtered Voltage: Sensor 1      *\\
+        double volt2Weighted = 0;                                           //*       Filtered Voltage: Sensor 2      *\\
+
+        List<double> coefficients = new List<double>();                     //*           Filter Coefficients         *\\
+
+        bool On;                                                            //*               System On/Off           *\\                    
+        bool sensor0;                                                       //*              Sensor 0 On/Off          *\\
+        bool sensor1;                                                       //*              Sensor 1 On/Off          *\\
+        bool sensor2;                                                       //*              Sensor 2 On/Off          *\\
+
+        string dev;                                                         //*               Device Number           *\\     
+                                                                            //*      Channels for each thermistor     *\\
+        AnalogI aIn0 = new AnalogI();                                       //*             Sensor 0 Channel          *\\
+        AnalogI aIn1 = new AnalogI();                                       //*             Sensor 1 Channel          *\\
+        AnalogI aIn2 = new AnalogI();                                       //*             Sensor 2 Channel          *\\
+   
         DigitalO dOut = new DigitalO();                                         //\/\/\// Global Variables //\/\/\/\//
         int closingcount;
         string ParameterPath = @"H:\Project-2-313\3-6-19\3.5versA2\Parameters.txt";
@@ -258,6 +262,51 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
         // This will determine which sensor values will be considered according to 
         // the user interface. Sensor variables are defaulted to true and can be 
         // changed by pressing the corresponding button.
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            sensor0 = checkBox1.Checked;
+            if (checkBox1.Checked == true)
+            {
+                textBox1.BackColor = Color.Honeydew;
+            }
+
+            if (checkBox1.Checked == false)
+            {
+                textBox1.BackColor = Color.MistyRose;
+                textBox1.Clear();
+            }
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            sensor1 = checkBox2.Checked;
+            if (checkBox2.Checked == true)
+            {
+                textBox2.BackColor = Color.Honeydew;
+            }
+
+            if (checkBox1.Checked == false)
+            {
+                textBox2.BackColor = Color.MistyRose;
+                textBox2.Clear();
+            }
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            sensor2 = checkBox2.Checked;
+            if (checkBox1.Checked == true)
+            {
+                textBox3.BackColor = Color.Honeydew;
+            }
+
+            if (checkBox2.Checked == false)
+            {
+                textBox3.BackColor = Color.MistyRose;
+                textBox3.Clear();
+            }
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
             sensor0 = !sensor0;
@@ -495,5 +544,7 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
         {
 
         }
+
+        
     }
 }
