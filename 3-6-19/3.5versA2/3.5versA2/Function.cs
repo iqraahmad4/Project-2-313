@@ -14,7 +14,7 @@ namespace _3._5versA2
         //Form2 f2 = new Form2();                                                                                //*    Specifications for thermistors     *\\
                                                                                                                                        //*     [sensor 0, sensor1, sensor2]      *\\
         int[] r = { 10000, 5000, 100000 };                                                                                             //*     ~~ Resistance @ 25 degrees ~~     *\\
-        int[] B = { 3380, 3960, 4380 };                                                                                                //*            ~~ B constant ~~           *\\
+        int[] B = { 3380, 4380, 3960 };                                                                                                //*            ~~ B constant ~~           *\\
       /*                                                                                                                 
        Helper Function: ReadTemperature                                                                                     
        Reads voltage from a sensor and applies filter parameters                                                            
@@ -32,15 +32,15 @@ namespace _3._5versA2
             //*       Read Rolled Average Voltages from Analog File       *\\
             for (int i = 0; i < 11-windowSize; i++)                                                                                     //*        For each element in the Rolled Voltage Array       *\\
             {                                                                                                               //*                                                           *\\
-                Console.WriteLine("volt[i] before " + volt.ElementAt(i));
+                Console.WriteLine("volt["+i+"] before " + volt.ElementAt(i));
                 double v_temp = volt.ElementAt(i);
                 double c_temp = coefficients.ElementAt(i);
                 double value = v_temp * c_temp;
-                Console.WriteLine("value "+value);
+               // Console.WriteLine("value "+value);
                     //* Multiply average wth the corresponding weight coefficient *\\
                 voltWeighted += value;
-                Console.WriteLine("coeff: " + coefficients[i]);
-                Console.WriteLine("volt[i] after " + volt[i]);                                                                    //*              Sum up weighted voltage averages             *\\
+             //   Console.WriteLine("coeff: " + coefficients[i]);
+             //   Console.WriteLine("volt[i] after " + volt[i]);                                                                    //*              Sum up weighted voltage averages             *\\
               //  Console.WriteLine("coefficients[i] " + coefficients[i]);
                 //Console.WriteLine("voltWeighted " + voltWeighted);
             }
@@ -53,7 +53,7 @@ namespace _3._5versA2
          and its value of resistance at 25 degrees Celcius and voltage                                                      
          of the sensor.                                                                                                    
          Uses equation T = B / (ln( (R0 * V/(5-V)) / R0* e^(-B/T0))).                                                   
-         Here, T0 = 25 degrees Celcius = 298 degrees Kelvin.                                                                
+         Here, T0 = 25 degrees Celcius = 298.15 degrees Kelvin.                                                                
              Input: sensorNumber ~ Sensor Index in Resistance Array                                                         
                                    and B-Constant Array;                                                                    
                     volt ~ Voltage at the Sensor.                                                                           
@@ -62,10 +62,15 @@ namespace _3._5versA2
 
         public double CalcTemp(int sensorNumber, double volt)                                                               //*                                                           *\\
         {                                                                                                                   //*           Substitute all variables into equation          *\\
-            double temp = B[sensorNumber] / (Math.Log((r[sensorNumber] * (volt / (5 - volt))) /                             //*                                                           *\\
-                (r[sensorNumber] * Math.Exp(-B[sensorNumber] / 298.15))));                                                  //*                                                           *\\
+           // double temp = B[sensorNumber] / Math.Log((r[sensorNumber] * (volt / (5 - volt))) / (r[sensorNumber] * Math.Exp(-B[sensorNumber] / 298.15))) ;
+            double R = r[sensorNumber] * 2*volt / (5 - volt); double R0 = r[sensorNumber]; double T0 = 25.0+273.15;
+            double temp = 1.0 / ((1.0 / T0) + (1.0 / B[sensorNumber]) * (Math.Log(R / R0)));
+            double vv = 5 * R0 * Math.Exp(B[sensorNumber] * (1 / 299.75 - 1 / 298.15)) / (1 + R0 * Math.Exp(B[sensorNumber] * (1 / 299.75 - 1 / 298.15)));
+            Console.WriteLine("vvvv: " + vv);
+            //    / (Math.Log((r[sensorNumber] * (volt / (5 - volt))) /                             //*                                                           *\\
+            //  (r[sensorNumber] * Math.Exp(-B[sensorNumber] / 298.15))));                                                  //*                                                           *\\
             temp = temp - 273.15;
-            Console.WriteLine("temp: " + temp);//*         Convert from Kelvin to Celcius: C=K-273.15        *\\
+            Console.WriteLine("temp: " + temp+ ", volt: "+volt);//*         Convert from Kelvin to Celcius: C=K-273.15        *\\
             return temp;                                                                                                    //*                                                           *\\
         }                                                                                                                   //*                                                           *\\
         public List<double> ReadParameters(string filepath)                                             //*                                                           *\\
@@ -190,7 +195,7 @@ namespace _3._5versA2
             return temp;                                                                                                    //*                Return average temperature              *\\
         }                                                                                                                   //*                                                        *\\
 
-        public void  WriteTemperature(string filepath, double temp,string[] data, int count)                                //*                                                        *\\
+        public void  WriteTemperature(string filepath, double temp,string[] data, double count)                             //*                                                        *\\
         {                                                                                                                   //*                                                        *\\
             int indexT = temp.ToString().LastIndexOf(".");                                                                  //*                                                        *\\
             if (temp.ToString().Length - temp.ToString().IndexOf(".") - 1 > 5)                                              //*                                                        *\\
@@ -205,12 +210,12 @@ namespace _3._5versA2
 
         public string ClosingForm1(bool resetting, int count)                                                               //*                                                        *\\
         {                                                                                                                   //*                                                        *\\
-            string message = "";                                                                                            //*                                                        *\\
+            string message = "A pleasure to be of service, Sir.";                                                                                            //*                                                        *\\
                                                                                                                             //* Different messages based on how many times user tries  *\\
             if (resetting) {                                                                                                //*    to close the form while the chamber is cooling.     *\\
                 if (count == 1)                                                                                             //*                                                        *\\
                 {                                                                                                           //*                                                        *\\
-                    message = "Wait! Chamber  is cooling!";                                                           //*                                                        *\\
+                    message = "Wait! The chamber is cooling!";                                                           //*                                                        *\\
                 }                                                                                                           //*                                                        *\\
                 else if (count == 2)                                                                                        //*                                                        *\\
                 {                                                                                                           //*                                                        *\\

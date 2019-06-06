@@ -67,8 +67,6 @@ namespace _3._5versA2
             for (int i = 0; i < coefficients.Count; i++)
             {
                 listBox1.Items.Add(coefficients.ElementAt(i));
-
-                
             }
 
             this.f1 = form1handel;

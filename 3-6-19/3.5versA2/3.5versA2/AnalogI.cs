@@ -15,7 +15,7 @@ namespace _3._5versA2
         int samplesPerChannel = 11;
         int sampleIndex = 0;
         double summedSamples=0;
-        List<double> samplesAvg = new List<double>();
+
         //double[] samplesAvg = new double[4];
 
 
@@ -56,10 +56,10 @@ namespace _3._5versA2
 
             //num of coeff =sample size+1-window size
             //first check if index has enough samples to continue
-
+            List<double> samplesAvg = new List<double>();
             for (int i=0; i<11; i++)
             {
-                Console.Write(" data: " + data.Samples[i].Value);
+               Console.Write(" data: " + data.Samples[i].Value);
             }
             int numAvgs = samplesPerChannel - window;
             for (int i = 0; i < numAvgs; i++)
@@ -72,9 +72,9 @@ namespace _3._5versA2
                 }
 
                 samplesAvg.Add(summedSamples / (numAvgs-1));
-                Console.WriteLine("volt: "+ (summedSamples / (numAvgs - 1)));
+          //      Console.WriteLine("volt: "+ (summedSamples / (numAvgs - 1)));
             }
-           // Console.WriteLine(samplesAvg[0] + " "+samplesAvg[1]+" "+ samplesAvg[2] + " "+samplesAvg[3] + " "+samplesAvg[4] + " " + samplesAvg[5]);
+           Console.WriteLine(samplesAvg[0] + " "+samplesAvg[1]+" "+ samplesAvg[2] + " "+samplesAvg[3] + " "+samplesAvg[4] + " " + samplesAvg[5]);
              //  samplesAvg =  { 26.0; 26.0; 26.0; 26.0; 26.0; };
              //double[] test=[1.0,1.0]
             //  "Sample{0}=>time={1}, value{2}", i + 1, data.Samples[i].TimeStamp, data.Samples[i].Value);
