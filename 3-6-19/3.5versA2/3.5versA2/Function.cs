@@ -10,45 +10,35 @@ namespace _3._5versA2
 {
     class Functions
     {
-        Task functions = new Task();//*    Specifications for thermistors     *\\
-                                    //*     [sensor 0, sensor1, sensor2]      *\\
-        int[] r = { 10000, 5000, 100000 };     //*     ~~ Resistance @ 25 degrees ~~     *\\
-        int[] B = { 3380, 4380, 3960 };                 //*            ~~ B constant ~~           *\\
-      /*                                                                                                                 
-       Helper Function: ReadTemperature                                                                                     
-       Reads voltage from a sensor and applies filter parameters                                                            
-       to rolled averages of voltage to output a weighted average.                                                          
-           Input: aIn ~ Analog Channel for Sensor.                                                                          
-           Output: voltWeighted ~  Weighted Aaverage Voltage.                                                               
-       */                                                                                                                   
-        public double ReadTemperaturet(AnalogI aIn, List<double> coefficients, int windowSize)                                                  //*                                                           *\\
-        {                                                                                                                   //*                                                           *\\
-            
-            double voltWeighted = 0;                                                                                        //*                                                           *\\
+        Task functions = new Task();                                            //*    Specifications for thermistors     *\\
+                                                                                //*     [sensor 0, sensor1, sensor2]      *\\
+        int[] r = { 10000, 5000, 100000 };                                      //*     ~~ Resistance @ 25 degrees ~~     *\\
+        int[] B = { 3380, 4380, 3960 };                                         //*            ~~ B constant ~~           *\\
+
+        /*                                                                                                                 
+         ReadTemperature                                                                                     
+         Reads voltage from a sensor and applies filter parameters                                                            
+         to rolled averages of voltage to output a weighted average.                                                          
+             Input: aIn ~ Analog Channel for Sensor.                                                                          
+             Output: voltWeighted ~ Weighted Aaverage Voltage.                                                               
+         */
+        public double ReadTemperaturet(AnalogI aIn, List<double> coefficients, int windowSize)
+        {
+            double voltWeighted = 0;
             List<double> volt = new List<double>();
-            volt= aIn.ReadData(windowSize);   
-            
-            //*       Read Rolled Average Voltages from Analog File       *\\
-            for (int i = 0; i < 11-windowSize; i++)                                                                                     //*        For each element in the Rolled Voltage Array       *\\
+            volt = aIn.ReadData(windowSize);                //*       Read Rolled Average Voltages from Analog File       *\\
+            for (int i = 0; i < 11 - windowSize; i++)       //*        For each element in the Rolled Voltage Array       *\\
             {
-                                                                                                                         //*                                                           *\\
-                Console.WriteLine("volt["+i+"] before " + volt.ElementAt(10 - windowSize - i));
-                double v_temp = volt.ElementAt(10-windowSize-i);
+                double v_temp = volt.ElementAt(i);
                 double c_temp = coefficients.ElementAt(i);
-                double value = v_temp * c_temp;
-               // Console.WriteLine("value "+value);
-                    //* Multiply average wth the corresponding weight coefficient *\\
-                voltWeighted += value;
-             //   Console.WriteLine("coeff: " + coefficients[i]);
-             //   Console.WriteLine("volt[i] after " + volt[i]);                                                                    //*              Sum up weighted voltage averages             *\\
-              //  Console.WriteLine("coefficients[i] " + coefficients[i]);
-                //Console.WriteLine("voltWeighted " + voltWeighted);
+                double value = v_temp * c_temp;             //* Multiply average wth the corresponding weight coefficient *\\
+                voltWeighted += value;                      //*              Sum up weighted voltage averages             *\\
             }
-          //  Console.WriteLine("voltweighted " + voltWeighted);//*                                                           *\\
-            return voltWeighted;                                                                                            //*              Return weighted voltage average              *\\
-        }                                                                                                                   //*                                                           *\\
+            return voltWeighted;                            //*              Return weighted average voltage              *\\
+        }           
+
         /*                                                                                                                
-         Helper Function: CalcTemp                                                                                          
+         CalcTemp                                                                                          
          Calculates temperature for a sensor based on its beta constant                                                     
          and its value of resistance at 25 degrees Celcius and voltage                                                      
          of the sensor.                                                                                                    
@@ -57,171 +47,194 @@ namespace _3._5versA2
              Input: sensorNumber ~ Sensor Index in Resistance Array                                                         
                                    and B-Constant Array;                                                                    
                     volt ~ Voltage at the Sensor.                                                                           
-             Output: temp ~  Calculated Temperature.                                                                        
-        */                                                                                                               
+             Output: temp ~ Calculated Temperature.                                                                        
+        */
+        public double CalcTemp(int sensorNumber, double volt)
+        {
+            double R = r[sensorNumber] *  (volt / (5 - volt)); double R0 = r[sensorNumber]; double T0 = 25.0 + 273.15;
+            double temp = 1.0 / ((1.0 / T0) + (1.0 / B[sensorNumber]) * (Math.Log(R / R0)));    //*           Substitute all variables into equation          *\\
+            temp = temp - 273.15;                                                               //*         Convert from Kelvin to Celcius: C=K-273.15        *\\
+            return temp;                                                                    //*   return calculated temperature   *\\                                                                                      
+        }
 
-        public double CalcTemp(int sensorNumber, double volt)                                                               //*                                                           *\\
-        {                                                                                                                   //*           Substitute all variables into equation          *\\
-            //double temp = B[sensorNumber] / (Math.Log((r[sensorNumber] /**2*/* (volt / (5 - volt))) / (r[sensorNumber] * Math.Exp((-1*(B[sensorNumber]))/ 298.15)))) ;
-           // volt = 2;
-            double R = r[sensorNumber] *(volt / (5 - volt)); double R0 = r[sensorNumber]; double T0 = 25.0+273.15;
-            double temp = 1.0 / (((1.0 / T0) + (1.0 / B[sensorNumber]) * (Math.Log(R / R0))));
-            double vv = 5 * R0 * Math.Exp(B[sensorNumber] * (1 / 299.75 - 1 / 298.15)) / (1 + R0 * Math.Exp(B[sensorNumber] * (1 / 299.75 - 1 / 298.15)));
-           // Console.WriteLine("vvvv: " + vv);
-            //    / (Math.Log((r[sensorNumber] * (volt / (5 - volt))) /                             //*                                                           *\\
-            //  (r[sensorNumber] * Math.Exp(-B[sensorNumber] / 298.15))));                                                  //*                                                           *\\
-            temp = temp - 273.15;
-            Console.WriteLine("temp: " + temp+ ", volt: "+volt);//*         Convert from Kelvin to Celcius: C=K-273.15        *\\
-            return temp;                                                                                                    //*                                                           *\\
-        }                                                                                                                   //*                                                           *\\
-        public List<double> ReadParameters(string filepath)                                             //*                                                           *\\
-        {                                                                                                                   //*                                                           *\\
+        /*                                                                                                                
+         ReadParameter                                                                                          
+         Read filter coefficients from Parameter text file.                                                                   
+             Input: filepath ~ Path file to Parameters.txt.                                                                          
+             Output: array ~ list of coefficients read.                                                                        
+        */
+        public List<double> ReadParameters(string filepath)
+        {
             List<double> array = new List<double>();
-            using (System.IO.StreamReader parameters = new System.IO.StreamReader(filepath))                                //*            Read Filter Parameters from text file          *\\
-            {                                                                                                               //*                                                           *\\                                                                                       //*                                                           *\\
-                string line;                                                                                                //*                                                           *\\
-                while ((line = parameters.ReadLine()) != "Filter Coefficients: ")                                                              //*               Reading each line in text file              *\\
+            using (System.IO.StreamReader parameters = new System.IO.StreamReader(filepath))   //*            Read Filter Parameters from text file          *\\
+            {
+                string line;
+                while ((line = parameters.ReadLine()) != "Filter Coefficients: ") { }         //*               Find header: 'Filter Coefficient'              *\\
+                while ((line = parameters.ReadLine()) != "")      //*               Reading list of coefficients              *\\
                 {
-                    //*                                                           *\\
+                    array.Add(Convert.ToDouble(line));   //*   Enter each weight coefficient into array    *\\     
                 }
-
-
-                while ((line = parameters.ReadLine()) != "")                                                              //*               Reading each line in text file              *\\
-                {
-
-                    array.Add(Convert.ToDouble(line));                                                         //*   Enter each weight coefficient into Coefficient Array    *\\                                                                               //*                                                           *\\
-
-                }        //*                                                           *\\
-                parameters.Close();                                                                                         //*                     Close parameter file                  *\\     
-               
-            }                                                                                                           //*                                                           *\\
-            return array;                                                                                                   //*                   Return coefficient array                *\\
-        }                                                                                                                   //*                                                           *\\
-
-        public int ReadWindowSize(string filepath)                                             //*                                                           *\\
-        {
-            int size;//*                                                           *\\
-            using (System.IO.StreamReader parameters = new System.IO.StreamReader(filepath))                                //*            Read Filter Parameters from text file          *\\
-            {                                                                                                               //*                                                           *\\
-                                                                                                     //*                                                           *\\
-                string line;                                                                                                //*                                                           *\\
-                while ((line = parameters.ReadLine()) != "Window Size: ")                                                              //*               Reading each line in text file              *\\
-                {
-                                                                                                    //*                                                           *\\
-                }
-                line = parameters.ReadLine();
-                    //*                                                           *\\
-
-                    size = Convert.ToInt32(line);                                                         //*   Enter each weight coefficient into Coefficient Array    *\\                                                             //*                                                           *\\
-                                                                                                                       //*                                                           *\\
-                parameters.Close();                                                                                         //*                     Close parameter file                  *\\                                                                                         //*                                                           *\\
-            }                                                                                                               //*                                                           *\\
-            return size;                                                                                                   //*                   Return coefficient array                *\\
+                parameters.Close();   //*                     Close parameter file                  *\\     
+            }
+            return array;        //*                   Return coefficient array                *\\
         }
 
-
-        public double ReadHighBand(string filepath)                                             //*                                                           *\\
+        /*                                                                                                                
+        ReadWindowSize                                                                                          
+        Read window size from Parameter text file.                                                                   
+            Input: filepath ~ Path file to Parameters.txt.                                                                          
+            Output: size ~ window size.                                                                        
+        */
+        public int ReadWindowSize(string filepath)
         {
-            double high;//*                                                           *\\
-            using (System.IO.StreamReader parameters = new System.IO.StreamReader(filepath))                                //*            Read Filter Parameters from text file          *\\
-            {                                                                                                               //*                                                           *\\
-                                                                                                     //*                                                           *\\
-                string line;                                                                                                //*                                                           *\\
-                while ((line = parameters.ReadLine()) != "High Band: ")                                                              //*               Reading each line in text file              *\\
-                {
-                    //*                                                           *\\
-                }
+            int size;
+            using (System.IO.StreamReader parameters = new System.IO.StreamReader(filepath))         //*            Read Filter Parameters from text file          *\\
+            {
+                string line;
+                while ((line = parameters.ReadLine()) != "Window Size: ") { }             //*               Find header: 'Window Size'                 *\\
                 line = parameters.ReadLine();
-                //*                                                           *\\
-
-                high = Convert.ToDouble(line);                                                         //*   Enter each weight coefficient into Coefficient Array    *\\                                                             //*                                                           *\\
-                                                                                                      //*                                                           *\\
-                parameters.Close();                                                                                         //*                     Close parameter file                  *\\                                                                                         //*                                                           *\\
-            }                                                                                                               //*                                                           *\\
-            return high;                                                                                                   //*                   Return coefficient array                *\\
+                size = Convert.ToInt32(line);              //*   Read window sze    *\\                                                             //*
+                parameters.Close();                //*                     Close parameter file                  *\\                                                                                         //*                                                           *\\
+            }
+            return size;      //*                   Return window size               *\\
         }
 
-        public double ReadLowBand(string filepath)                                             //*                                                           *\\
-        {                                                                                                                   //*                                                           *\\
+        /*                                                                                                                
+         ReadHighBand                                                                                          
+         Read window size from Parameter text file.                                                                   
+             Input: filepath ~ Path file to Parameters.txt.                                                                          
+             Output: high ~ high band.                                                                        
+        */
+        public double ReadHighBand(string filepath)
+        {
+            double high;
+            using (System.IO.StreamReader parameters = new System.IO.StreamReader(filepath))        //*            Read Filter Parameters from text file          *\\
+            {
+                string line;
+                while ((line = parameters.ReadLine()) != "High Band: ") { }      //*              Find header: 'High Band'              *\\
+                line = parameters.ReadLine();
+                high = Convert.ToDouble(line);         //*   Read high band     *\\ 
+                parameters.Close();              //*                     Close parameter file                  *\\                                                                                         //*                                                           *\\
+            }
+            return high;       //*                   Return high band                *\\
+        }
+
+        /*                                                                                                                
+         ReadLowBand                                                                                          
+         Read window size from Parameter text file.                                                                   
+             Input: filepath ~ Path file to Parameters.txt.                                                                          
+             Output: low ~ low band.                                                                        
+        */
+        public double ReadLowBand(string filepath)
+        {
             double low;
-            using (System.IO.StreamReader parameters = new System.IO.StreamReader(filepath))                                //*            Read Filter Parameters from text file          *\\
-            {                                                                                                               //*                                                           *\\
-                int lineCounter = 0;                                                                                        //*                                                           *\\
-                string line;                                                                                                //*                                                           *\\
-                while ((line = parameters.ReadLine()) != "Low Band: ")                                                              //*               Reading each line in text file              *\\
-                {
-                    //*                                                           *\\
-                }
+            using (System.IO.StreamReader parameters = new System.IO.StreamReader(filepath))    //*            Read Filter Parameters from text file          *\\
+            {
+                string line;
+                while ((line = parameters.ReadLine()) != "Low Band: ") { }    //*               Find header: 'Low Band'             *\\
                 line = parameters.ReadLine();
-                //*                                                           *\\
-
-                low = Convert.ToDouble(line);                                                         //*   Enter each weight coefficient into Coefficient Array    *\\                                                             //*                                                           *\\
-                                                                                                      //*                                                           *\\
+                low = Convert.ToDouble(line);                                                         //*   Read low band    *\\                                                             //*                                                           *\\
                 parameters.Close();                                                                                         //*                     Close parameter file                  *\\                                                                                         //*                                                           *\\
-            }                                                                                                               //*                                                           *\\
-            return low;                                                                                                   //*                   Return coefficient array                *\\
+            }
+            return low;                                                                                                   //*                   Return low band                *\\
         }
 
-        public string[] sensorCalc(double volt, int sensornumber, string[] data)                                            //*                                                           *\\
-        {                                                                                                                   //*                                                           *\\
-            double temp = CalcTemp(sensornumber, volt);                                                                                //*                  Calculate sensor temperature             *\\                                                       
-         
+        /*                                                                                                                
+         sensorCalc                    
+         Calculate the temperature for a given sensor                                                                 
+             Input: volt ~ voltage read by sensor;
+                    sensornumber ~ index to refer to that  
+                                   sensor's properties or 
+                                   information;
+                    data ~ array storing temperatures from 
+                           each of the three sensors.
+             Output: data ~ array storing temperatures from 
+                           each of the three sensors.                                                                       
+        */
+        public string[] sensorCalc(double volt, int sensornumber, string[] data)
+        {
+            double temp = CalcTemp(sensornumber, volt);              //*                  Calculate sensor temperature             *\\                                                       
             data[sensornumber] = temp.ToString();                                                                           //*               Store sensor temperature in array           *\\
-      
             return data;                                                                                                    //*                Return sensor temperature array            *\\
-        }                                                                                                                   //*                                                           *\\
-
-        public double CalcAvgTemp(string[] data,int tally)                                                                  //*                                                           *\\
-        {                                                                                                                   //*                                                           *\\
-            for (int i = 0; i < 3; i++)                                                                                     //*                                                        *\\
-            {                                                                                                               //*                                                        *\\
-                if (data[i] == "")                                                                                          //*                 If sensor is deactivated               *\\
-                {                                                                                                           //*                                                        *\\
-                    data[i] = "0";                                                                                          //*                  Temperature value = 0                 *\\
-                }                                                                                                           //*                                                        *\\
-                else                                                                                                        //*                                                        *\\
-                {                                                                                                           //*                                                        *\\
+        }
+        /*                                                                                                                
+         CalcAvgTemp                    
+         Calculate the average temperature for a given 
+         number of sensors.                                                                 
+             Input: data ~ array storing temperatures from 
+                          each of the three sensors;
+                    tally ~ number of sensors to average.
+             Output: temp ~ averaged temperature                                                                       
+       */
+        public double CalcAvgTemp(string[] data, int tally)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                if (data[i] == "")                         //*                 If sensor is deactivated               *\\
+                {
+                    data[i] = "0";                 //*                  Temperature value = 0                 *\\
+                }
+                else
+                {
                     int index = data[i].LastIndexOf(".");
                     if (data[i].ToString().Length - data[i].ToString().IndexOf(".") - 1 > 5)
-                    {//*                                                        *\\
-                        data[i] = data[i].Substring(0, index + 5);
-                    }//*          Contract data to upto 4 decimal places        *\\
-                }                                                                                                           //*                                                        *\\
-            }                                                                                                               //*       Average temperature = sum of data divided by     *\\
-
-
-          
-            double temp = (Convert.ToDouble(data[0]) + Convert.ToDouble(data[1]) + Convert.ToDouble(data[2])) / tally; //*                 Number of active sensors               *\\
-    
-            return temp;                                                                                                    //*                Return average temperature              *\\
-        }                                                                                                                   //*                                                        *\\
-
-        public void  WriteTemperature(string filepath, double temp,string[] data, double count)                             //*                                                        *\\
-        {                                                                                                                   //*                                                        *\\
-            int indexT = temp.ToString().LastIndexOf(".");                                                                  //*                                                        *\\
-            if (temp.ToString().Length - temp.ToString().IndexOf(".") - 1 > 5)                                              //*                                                        *\\
-            {                                                                                                               //*                                                        *\\
+                    {
+                        data[i] = data[i].Substring(0, index + 5);    //*          Contract data to upto 4 decimal places        *\\
+                    }
+                }
+            }                                                                                                                //*       Average temperature = sum of data divided by     *\\
+            double temp = (Convert.ToDouble(data[0]) + Convert.ToDouble(data[1]) + Convert.ToDouble(data[2])) / tally;  //*                 Number of active sensors               *\\
+            return temp;                              //*                Return average temperature              *\\
+        }
+        /*                                                                                                                
+         WriteTemperature                    
+         Writes a calculated temperature into Temperatures 
+         text file.                                                            
+             Input: data ~ array storing temperatures from 
+                          each of the three sensors;
+                    temp ~ averaged temperature;
+                    filepath ~ Path file to Temperatures.txt;
+                    count ~ time log of when the temperature
+                            will be written.                     
+       */
+        public void WriteTemperature(string filepath, double temp, string[] data, double count)                        
+        {                                                                                                        
+            int indexT = temp.ToString().LastIndexOf(".");                                                              
+            if (temp.ToString().Length - temp.ToString().IndexOf(".") - 1 > 5)                                              
+            {                                                                                                          
                 temp = Convert.ToDouble(temp.ToString().Substring(0, indexT + 5));                                          //* Contract average temperaature to upto 4 decimal places *\\
-            }                                                                                                               //*                                                        *\\
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(filepath, true))                                //*      Write sensor data to text file 'Temperatures'     *\\
-            {                                                                                                               //*                                                        *\\
-                file.WriteLine("\n"+ count.ToString() + "\t"+data[0] + "\t"+data[1] + "\t"+ data[2] + "\t"+temp);           //*                                                        *\\
-            }                                                                                                               //*                                                        *\\
-        }                                                                                                                   //*                                                        *\\
-
-        public string ClosingForm1(bool resetting, int count)                                                               //*                                                        *\\
-        {                                                                                                                   //*                                                        *\\
-            string message = "A pleasure to be of service, Sir.";                                                                                            //*                                                        *\\
-                                                                                                                            //* Different messages based on how many times user tries  *\\
-            if (resetting) {                                                                                                //*    to close the form while the chamber is cooling.     *\\
-                if (count == 1)                                                                                             //*                                                        *\\
-                {                                                                                                           //*                                                        *\\
-                    message = "Wait! The chamber is cooling!";                                                           //*                                                        *\\
-                }                                                                                                           //*                                                        *\\
-                else if (count == 2)                                                                                        //*                                                        *\\
-                {                                                                                                           //*                                                        *\\
-                    message = "I said, hold your horses! Let it cool down first!";                                          //*                                                        *\\
-                }                                                                                                           //*                                                        *\\
+            }                                                                                                         
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(filepath, true))                                //*      Write sensor data to and averaged temperatutre to text file 'Temperatures'     *\\
+            {                                                                                                              
+                file.WriteLine("\n" + data[0] + "\t" + data[1] + "\t" + data[2] + "\t" + temp);       
+            }                                                                                                          
+        }  
+        /*                                                                                                                
+         ClosingForm1                    
+         A combination of messages to be output when the GUI 
+         will be attempted to close based on whether the 
+         chamber is cooling down or not.
+             Input: resetting ~ true -> chamber cooling down
+                                false -> chamber at room 
+                                temperature;
+                    count ~ number of tries for user closing 
+                            the GUI;
+            Output: message ~ the message that will show.
+       */
+        public string ClosingForm1(bool resetting, int count)           
+        {                                                      
+            string message = "A pleasure to be of service, Sir.";     
+                                                                                         //* Different messages based on how many times user tries  *\\
+            if (resetting)
+            {                                                                  //*    to close the form while the chamber is cooling.     *\\
+                if (count == 1)                                                                              
+                {                                                                                                      
+                    message = "Wait! The chamber is cooling!";                                                        
+                }                                                                                                   
+                else if (count == 2)                                                                                   
+                {                                                                                                         
+                    message = "I said, hold your horses! Let it cool down first!";                                         
+                }                                                                                                
                 else if (count == 3 || count == 11)
                 {
                     message = "I'm starting to think that you don't know what 'Okay' means...";
@@ -272,7 +285,7 @@ namespace _3._5versA2
                 {
                     MessageBox.Show("My gosh that was stressful! You may continue now.");
                 }
-                else if (count== 6 || count == 7 || count == 8 || count == 9)
+                else if (count == 6 || count == 7 || count == 8 || count == 9)
                 {
                     MessageBox.Show("Forget this, I'm out!");
                 }

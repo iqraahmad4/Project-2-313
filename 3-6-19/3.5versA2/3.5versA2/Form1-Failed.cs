@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using _3._5versA2;
 using System.Threading;
+using System.Diagnostics;
 
 
 
@@ -53,7 +54,8 @@ namespace _3._5versA2
         AnalogI aIn2 = new AnalogI();                                       //*             Sensor 2 Channel          *\\
         DigitalO dOut = new DigitalO();                                     //*  Access functions to control chamber  *\\
         Functions func = new Functions();                                   //*         Access helper functions       *\\
-                                                                                //\/\/\// Global Variables //\/\/\/\//
+                                                                            //\/\/\// Global Variables //\/\/\/\//
+        Stopwatch Stopwatch = new Stopwatch();
 
 
 
@@ -204,7 +206,9 @@ of all the calculated sensor temperatures are written into a text file 'Temperat
 The timer counter resets to 0 after 5 ticks to recount another period of 0.5 seconds.
 */
         private void timer1_Tick(object sender, EventArgs e)                                       
-        {                                                                            
+        {
+            Stopwatch.Reset();
+            Stopwatch.Start();
             volt0Weighted = func.ReadTemperaturet(aIn0,coefficients, windowSize); //*     Get weighted average of voltage for each sensor    *\\
             volt1Weighted = func.ReadTemperaturet(aIn1,coefficients, windowSize);
             volt2Weighted = func.ReadTemperaturet(aIn2,coefficients, windowSize);          
@@ -214,7 +218,7 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                 int tally = 0;       
                 count += 0.1;
                 string[] data = { "", "", "" };                        
-                if (sensor0) { }                                                 //*                    If sensor activate                  *\\
+                if (sensor0)                                                 //*                    If sensor activate                  *\\
                 {                                                             
                     data = func.sensorCalc(volt0Weighted, 0, data);               //*               Calculate sensor temperature and store in array            *\\
                     tally += 1;                                            //*            Store sensor temperature in array           *\\
@@ -256,8 +260,16 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                     else                                        
                     {                                                                                                            
                         textBox6.Text = temp.ToString();     //*     Otherwise, display average temperature in GUI      *\\                            
-                    }  
-                }                                    
+                    } 
+                }
+                Stopwatch.Stop();
+                TimeSpan ts = Stopwatch.Elapsed;
+
+                // Format and display the TimeSpan value.
+                string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                    ts.Hours, ts.Minutes, ts.Seconds,
+                    ts.Milliseconds / 10);
+                Console.WriteLine("RunTime " + elapsedTime);
             }
         }                        
 

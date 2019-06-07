@@ -57,10 +57,7 @@ namespace _3._5versA2
             //num of coeff =sample size+1-window size
             //first check if index has enough samples to continue
             List<double> samplesAvg = new List<double>();
-            for (int i=0; i<10; i++)
-            {
-               Console.Write(" data: " + data.Samples[i].Value);
-            }
+           
             int numAvgs = samplesPerChannel - window;
             for (int i = 0; i < numAvgs; i++)
                 {
