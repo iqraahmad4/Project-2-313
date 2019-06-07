@@ -10,11 +10,10 @@ namespace _3._5versA2
 {
     class Functions
     {
-        Task functions = new Task();
-        //Form2 f2 = new Form2();                                                                                //*    Specifications for thermistors     *\\
-                                                                                                                                       //*     [sensor 0, sensor1, sensor2]      *\\
-        int[] r = { 10000, 5000, 100000 };                                                                                             //*     ~~ Resistance @ 25 degrees ~~     *\\
-        int[] B = { 3380, 4380, 3960 };                                                                                                //*            ~~ B constant ~~           *\\
+        Task functions = new Task();//*    Specifications for thermistors     *\\
+                                    //*     [sensor 0, sensor1, sensor2]      *\\
+        int[] r = { 10000, 5000, 100000 };     //*     ~~ Resistance @ 25 degrees ~~     *\\
+        int[] B = { 3380, 4380, 3960 };                 //*            ~~ B constant ~~           *\\
       /*                                                                                                                 
        Helper Function: ReadTemperature                                                                                     
        Reads voltage from a sensor and applies filter parameters                                                            
