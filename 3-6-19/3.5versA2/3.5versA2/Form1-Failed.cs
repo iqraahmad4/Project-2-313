@@ -54,16 +54,10 @@ namespace _3._5versA2
         Functions func = new Functions();
 
                 ///DEBUGGING\\\
-bool clicked; bool clicked6;
-int ticker = 0;
- double temp0s0 = 0;
- double temp1s1 = 0;
- double temp2s2 = 0;
- double [] diff0 = {0,0,0,0,0 };
- double[] diff1 ={0,0,0,0,0 };
- double [] diff2 = { 0, 0, 0, 0, 0 };
+
+
  bool reseting=false;
- bool Off = false;
+
    
 
         
@@ -94,7 +88,7 @@ int ticker = 0;
                 //*                                                                *\\
                 dOut.WriteData(0);                                                                                                                      //*                Set Fan and Heater initally to  'Off'           *\\  
                 GUISettings(false, textBox5, "Fan"); GUISettings(false, textBox4, "Heat");                                                              //*        Change GUI to reflect status of the fan and heater      *\\
-                clicked = false; clicked6 = false;                                                                                                      //*                                                                *\\
+                                                                    //*                                                                *\\
                 sensor0 = true; sensor1 = true; sensor2 = true;                                                                                         //*                   Set all sensors initally to 'On'             *\\
                 coefficients = func.ReadParameters(ParameterPath);                                                                                    //*                Read Filter Parameters from text file           *\\
                 windowSize = func.ReadWindowSize(ParameterPath);
@@ -161,6 +155,13 @@ int ticker = 0;
         {
             this.coefficients = cs;
             this.windowSize = wind; this.High = Hi; this.Low = Lo;
+            listBox1.Items.Clear();
+            for (int i = 0; i < coefficients.Count; i++)
+            {
+                listBox1.Items.Add(coefficients.ElementAt(i).ToString());
+            }
+            textBox10.Text = windowSize.ToString(); textBox11.Text = High.ToString(); textBox12.Text = Low.ToString();
+
             for (int i=0; i<coefficients.Count; i++)
             {
                 Console.Write(" " + coefficients[i]);
@@ -184,17 +185,12 @@ int ticker = 0;
             On = !On;                                                                                                                                       //*                   Toggle the button  'On' or 'Off'                 *\\
                                                                                                                                                             //*                                                                    *\\                     
             if (On)                                                                                                                                         //*                       If turning the system on                     *\\
-            {                                                                                                                                               //*                                                                    *\\
-                //coefficients = func.ReadParameters(ParameterPath, coefficients);                                                                                    //*                Read Filter Parameters from text file           *\\   
+            {
                 backgroundWorker1.RunWorkerAsync();                                                                                                     //*                                                                    *\\
             }                                                                                                                                               //*                                                                    *\\
             else                                                                                                                                            //*                      If turning the system off                     *\\
-            {                                                                                                                                               //*                                                                    *\\
-                                                                                                                   //*                                                                    *\\
-                Off = true;                                                                                                                                 //*                                                                    *\\
-              
-                backgroundWorker3.RunWorkerAsync();                                                                                                                  //*                                                                    *\\
-               
+            {     
+                backgroundWorker3.RunWorkerAsync();  
                 On = false;                                                                                                                                 //*                                                                    *\\
             }                                                                                                                                               //*                                                                    *\\
         }                                                                                                                                                   //*                                                                    *\\
@@ -215,7 +211,7 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
             volt0Weighted = func.ReadTemperaturet(aIn0,coefficients, windowSize);
             volt1Weighted = func.ReadTemperaturet(aIn1,coefficients, windowSize);
             volt2Weighted = func.ReadTemperaturet(aIn2,coefficients, windowSize);          //*     Get weighted average of voltage for each sensor    *\\
-            if (On || reseting||clicked||!clicked)                                                                                                    //*                     If system is on                    *\\
+            if (On || reseting)                                                                                                    //*                     If system is on                    *\\
             {                                                                                                                               //*                                                        *\\                                                                                                                            //*                                                        *\\
                 timerticks += 1;                                                                                                            //*                  Increment timerticks                  *\\
                 int tally = 0;                                                                                                              //*                                                        *\\
@@ -299,6 +295,7 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
             if (checkBox1.Checked == true)
             {
                 textBox1.BackColor = Color.Honeydew;
+                checkBox1.Text = "Active";
             }
 
             else 
@@ -315,6 +312,7 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
             if (checkBox2.Checked == true)
             {
                 textBox2.BackColor = Color.Honeydew;
+                checkBox2.Text = "Active";
             }
 
             else
@@ -331,6 +329,7 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
             if (checkBox3.Checked == true)
             {
                 textBox3.BackColor = Color.Honeydew;
+                checkBox3.Text = "Active";
             }
 
             else
@@ -340,49 +339,7 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                 textBox3.Clear();
             }
         }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            sensor0 = !sensor0;
-            if (sensor0)
-            {
-                textBox1.BackColor = Color.Honeydew;
-            }
-            else
-            {
-                textBox1.BackColor = Color.MistyRose;
-                textBox1.Clear();
-            }
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            sensor1 = !sensor1;
-            if (sensor1)
-            {
-                textBox2.BackColor = Color.Honeydew;
-            }
-            else
-            {
-                textBox2.BackColor = Color.MistyRose;
-                textBox2.Clear();
-            }
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            sensor2 = !sensor2;
-            if (sensor2)
-            {
-                textBox3.BackColor = Color.Honeydew;
-            }
-            else
-            {
-                textBox3.BackColor = Color.MistyRose;
-                textBox3.Clear();
-            }
-        }
-
+        
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             userTemp = Convert.ToDouble(numericUpDown1.Value) + roomTemp;
@@ -455,12 +412,6 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
             }
         }
 
-
-
-
-
-
-
         //closing while fan on
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -476,9 +427,7 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                 {
                     e.Cancel = false;
                 }
-                
             }
-
         }
 
 
@@ -522,59 +471,6 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
         private void Form1_Load(object sender, EventArgs e)
         {
 
-        }
-
-
-        ///DEBUGGING\\\
-        //manually turn shit off
-        private void button5_Click(object sender, EventArgs e)
-        {
-            clicked = !clicked;
-            if (clicked)
-            {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"H:\313 Project version 2\Project-2-313-master\3.5versA2\Temperatures.txt", true))  //*      Write sensor data to text file 'Temperatures'     *\\
-                {                                                                                                                       //*                                                        *\\
-                    file.WriteLine("Heat Rate: ");                  //*                                                        *\\
-                }
-                dOut.WriteData(2);
-                textBox6.Text = temp.ToString();
-                textBox4.Text = "Heat On";
-                textBox4.BackColor = Color.DarkSeaGreen;
-                textBox5.Text = "Fan Off";
-                textBox5.BackColor = Color.Firebrick;
-            }
-            if (!clicked)
-            {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"H:\313 Project version 2\Project-2-313-master\3.5versA2\Temperatures.txt", true))  //*      Write sensor data to text file 'Temperatures'     *\\
-                {                                                                                                                       //*                                                        *\\
-                    file.WriteLine("Cooling Rate: ");                  //*                                                        *\\
-                }
-                dOut.WriteData(3); textBox5.Text = "Fan On"; textBox4.Text = "Heater On"; textBox4.BackColor = Color.DarkSeaGreen; textBox5.BackColor = Color.DarkSeaGreen;
-            }
-            //Console.WriteLine("Heat Fan Off");
-        }
-
-
-        //manually turn shit off/on
-        private void button6_Click(object sender, EventArgs e)
-        {
-            DigitalO dOut = new DigitalO();
-            dOut.OpenChannel(dev);
-            clicked6 = !clicked6;
-
-            if (!clicked6)
-            {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"H:\313 Project version 2\Project-2-313-master\3.5versA2\Temperatures.txt", true))  //*      Write sensor data to text file 'Temperatures'     *\\
-                {                                                                                                                       //*                                                        *\\
-                    file.WriteLine("Done: ");                  //*                                                        *\\
-                }
-                dOut.WriteData(1);
-                textBox5.Text = "Fan On"; textBox4.Text = "Heater Off"; textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.DarkSeaGreen;
-            }
-            else
-            {
-                dOut.WriteData(0); textBox5.Text = "Fan Off"; textBox4.Text = "Heater Off"; textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;
-            }
         }
     }
 }

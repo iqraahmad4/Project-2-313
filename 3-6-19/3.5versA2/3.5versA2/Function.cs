@@ -31,9 +31,10 @@ namespace _3._5versA2
             
             //*       Read Rolled Average Voltages from Analog File       *\\
             for (int i = 0; i < 11-windowSize; i++)                                                                                     //*        For each element in the Rolled Voltage Array       *\\
-            {                                                                                                               //*                                                           *\\
-                Console.WriteLine("volt["+i+"] before " + volt.ElementAt(i));
-                double v_temp = volt.ElementAt(i);
+            {
+                                                                                                                         //*                                                           *\\
+                Console.WriteLine("volt["+i+"] before " + volt.ElementAt(10 - windowSize - i));
+                double v_temp = volt.ElementAt(10-windowSize-i);
                 double c_temp = coefficients.ElementAt(i);
                 double value = v_temp * c_temp;
                // Console.WriteLine("value "+value);
@@ -44,7 +45,7 @@ namespace _3._5versA2
               //  Console.WriteLine("coefficients[i] " + coefficients[i]);
                 //Console.WriteLine("voltWeighted " + voltWeighted);
             }
-            Console.WriteLine("voltweighted " + voltWeighted);//*                                                           *\\
+          //  Console.WriteLine("voltweighted " + voltWeighted);//*                                                           *\\
             return voltWeighted;                                                                                            //*              Return weighted voltage average              *\\
         }                                                                                                                   //*                                                           *\\
         /*                                                                                                                
@@ -62,11 +63,12 @@ namespace _3._5versA2
 
         public double CalcTemp(int sensorNumber, double volt)                                                               //*                                                           *\\
         {                                                                                                                   //*           Substitute all variables into equation          *\\
-           // double temp = B[sensorNumber] / Math.Log((r[sensorNumber] * (volt / (5 - volt))) / (r[sensorNumber] * Math.Exp(-B[sensorNumber] / 298.15))) ;
-            double R = r[sensorNumber] * 2*volt / (5 - volt); double R0 = r[sensorNumber]; double T0 = 25.0+273.15;
-            double temp = 1.0 / ((1.0 / T0) + (1.0 / B[sensorNumber]) * (Math.Log(R / R0)));
+            //double temp = B[sensorNumber] / (Math.Log((r[sensorNumber] /**2*/* (volt / (5 - volt))) / (r[sensorNumber] * Math.Exp((-1*(B[sensorNumber]))/ 298.15)))) ;
+           // volt = 2;
+            double R = r[sensorNumber] *(volt / (5 - volt)); double R0 = r[sensorNumber]; double T0 = 25.0+273.15;
+            double temp = 1.0 / (((1.0 / T0) + (1.0 / B[sensorNumber]) * (Math.Log(R / R0))));
             double vv = 5 * R0 * Math.Exp(B[sensorNumber] * (1 / 299.75 - 1 / 298.15)) / (1 + R0 * Math.Exp(B[sensorNumber] * (1 / 299.75 - 1 / 298.15)));
-            Console.WriteLine("vvvv: " + vv);
+           // Console.WriteLine("vvvv: " + vv);
             //    / (Math.Log((r[sensorNumber] * (volt / (5 - volt))) /                             //*                                                           *\\
             //  (r[sensorNumber] * Math.Exp(-B[sensorNumber] / 298.15))));                                                  //*                                                           *\\
             temp = temp - 273.15;

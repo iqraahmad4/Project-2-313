@@ -58,5 +58,13 @@ namespace _3._5versA2
             }
 
         }
+
+        private void Form3_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                button1_Click_1(button1, EventArgs.Empty);
+            }
+        }
     }
 }
