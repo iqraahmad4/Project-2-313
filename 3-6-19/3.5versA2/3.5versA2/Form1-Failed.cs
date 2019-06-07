@@ -103,7 +103,7 @@ namespace _3._5versA2
                 if (dev == "Nothing")
                 {
                     Form1_Load(this, null);                                                                 //*                      Load the form and close it                *\\
-                    this.Close();                                                                
+                    this.Close();
                 }
             }
         }
@@ -204,84 +204,62 @@ of all the calculated sensor temperatures are written into a text file 'Temperat
 The timer counter resets to 0 after 5 ticks to recount another period of 0.5 seconds.
 */
         private void timer1_Tick(object sender, EventArgs e)                                       
-        {                                                                                          
-                                                                                                                                            //*    Change GUI to reflect status of the fan and heater  *\\
-            volt0Weighted = func.ReadTemperaturet(aIn0,coefficients, windowSize);
+        {                                                                            
+            volt0Weighted = func.ReadTemperaturet(aIn0,coefficients, windowSize); //*     Get weighted average of voltage for each sensor    *\\
             volt1Weighted = func.ReadTemperaturet(aIn1,coefficients, windowSize);
-            volt2Weighted = func.ReadTemperaturet(aIn2,coefficients, windowSize);          //*     Get weighted average of voltage for each sensor    *\\
-            if (On || reseting)                                                                                                    //*                     If system is on                    *\\
-            {                                                                                                                                                                                                                                //*                                                        *\\
-                timerticks += 1;                                                                                                            //*                  Increment timerticks                  *\\
-                int tally = 0;                                                                                                              //*                                                        *\\
-                
+            volt2Weighted = func.ReadTemperaturet(aIn2,coefficients, windowSize);          
+            if (On || reseting)                                                         //*                     If system is on or cooling                    *\\
+            {                                                                                                                               //*                                                        *\\                                                                                                                            //*                                                        *\\
+                timerticks += 1;                                                   //*                  Increment timerticks                  *\\
+                int tally = 0;       
                 count += 0.1;
-                string[] data = { "", "", "" };                                                                         //*                  Reset timerticks to 0                 *\\
-                if (sensor0) { }                                                                                                          //*                    If sensor activate                  *\\
-                {                                                                                                                       //*                                                        *\\
-                    data = func.sensorCalc(volt0Weighted, 0, data);                                                                       //*               Calculate sensor temperature             *\\
-                                                                                                  //*           Store sensor temperature in textbox          *\\
-                    tally += 1;                                                           //*            Store sensor temperature in array           *\\
-                }                                                                                                                       //*                                                        *\\
-                if (sensor1)                                                                                                            //*                    If sensor activate                  *\\
-                {                                                                                                                       //*                                                        *\\
-                    data = func.sensorCalc(volt0Weighted, 1, data);                                                                      //*               Calculate sensor temperature             *\\
-                                                                                                                                         //*                                                        *\\
-                                                                                                  //*           Store sensor temperature in textbox          *\\
-                    tally += 1;                                                                                   //*            Store sensor temperature in array           *\\
-                }                                                                                                                       //*                                                        *\\
-                if (sensor2)                                                                                                            //*                    If sensor activate                  *\\
-                {                                                                                                                       //*                                                        *\\
-                    data = func.sensorCalc(volt0Weighted, 2, data);                                                                        //*               Calculate sensor temperature             *\\
-                                                                                                                                           //double temp2 = 24.67488596;                                                                                                             //*                                                        *\\
-                                                                                               //*           Store sensor temperature in textbox          *\\
-                    tally += 1;                                                                                //*            Store sensor temperature in array           *\\
-                }                                                                                                                       //*                                                        *\\
-                                                                                                                                        //*                                                        *\\
+                string[] data = { "", "", "" };                        
+                if (sensor0) { }                                                 //*                    If sensor activate                  *\\
+                {                                                             
+                    data = func.sensorCalc(volt0Weighted, 0, data);               //*               Calculate sensor temperature and store in array            *\\
+                    tally += 1;                                            //*            Store sensor temperature in array           *\\
+                }                                                    
+                if (sensor1)                                                     //*                    If sensor activate                  *\\
+                {                                                 
+                    data = func.sensorCalc(volt0Weighted, 1, data);                 //*               Calculate sensor temperature and store in array             *\\
+                    tally += 1;                                         
+                }                                    
+                if (sensor2)                                    //*                    If sensor activate                  *\\
+                {                                                              
+                    data = func.sensorCalc(volt0Weighted, 2, data);                         //*               Calculate sensor temperature and store in array            *\\
+                    tally += 1;                               
+                }   
+                
+                temp = func.CalcAvgTemp(data, tally);                      //*                 Calculate average temperature of active sensors               *\\
+                func.WriteTemperature(tempPath, temp, data, count);           //*          Write temperate data in text file          *\\
 
-                //*      Average temperature = sum of data divided by      *\\
-                temp = func.CalcAvgTemp(data, tally);                                                                             //*                 Number of active sensors               *\\
-                                                                                             //*                                                        *\\
-                func.WriteTemperature(tempPath, temp, data, count);
-
-
-                if (timerticks == 5)                                                                                                        //*                     If 5 ticks pass                    *\\
-                {                                                                                             //*               Increment data record number             *\\
-                    timerticks = 0;
-                    if (sensor0) { }                                                                                                          //*                    If sensor activate                  *\\
-                    {                                                                                                                       //*                                                        *\\
-                        
-                        textBox1.Text = data[0];                                                                                   //*           Store sensor temperature in textbox          *\\
-                       
-                    }                                                                                                                       //*                                                        *\\
-                    if (sensor1)                                                                                                            //*                    If sensor activate                  *\\
-                    {                                                                                                                       //*                                                        *\\
-                       
-                                                                                                                                             //*                                                        *\\
-                        textBox2.Text = data[1];                                                                                   //*           Store sensor temperature in textbox          *\\
-
-                    }                                                                                                                       //*                                                        *\\
-                    if (sensor2)                                                                                                            //*                    If sensor activate                  *\\
+                if (timerticks == 5)               //*                     If 5 ticks pass                    *\\
+                {                       
+                    timerticks = 0; //*reset timerticks to 0 *\\
+                    if (sensor0)    //*                    If sensor active                  *\\
+                    {             
+                        textBox1.Text = data[0];                   //*           Store sensor temperature in textbox          *\\
+                    }                          
+                    if (sensor1)          //*                    If sensor active                  *\\
+                    {                       
+                        textBox2.Text = data[1];  //*           Store sensor temperature in textbox          *\\
+                    }                                        
+                    if (sensor2)                       //*                    If sensor activate                  *\\
                     {                                                                                                 //*                                                        *\\
-                        textBox3.Text = data[2];                                                                                   //*           Store sensor temperature in textbox          *\\
-                       
-                    }                                                                                                                       //*                                                        *\\
-                                                                                                                                            //*                                                        *\\
-
-                    //*      Average temperature = sum of data divided by      *\\
-                                                                                         //*                 Number of active sensors               *\\
-                    if (tally == 0)                                                                                                         //*                                                        *\\
-                    {                                                                                                                       //*   Display 'No Sensors Read' if no sensors are active   *\\ 
-                        textBox6.Text = "No Sensors Read";                                                                                  //*                                                        *\\
-                    }                                                                                                                       //*                                                        *\\
-                    else                                                                                                                    //*                                                        *\\
-                    {                                                                                                                       //*     Otherwise, display average temperature in GUI      *\\
-                                                                                                                                            //*                                                        *\\
-                        textBox6.Text = temp.ToString();                                                                                    //*                                                        *\\
-                    }    
-                    //*                                                        *\\
-                }                                                                                                                           //*                                                        *\\
-            }                                                                                                                               //*                                                        *\\
-        }                                                                                                                                   //*                                                        *\\
+                        textBox3.Text = data[2];                                          //*           Store sensor temperature in textbox          *\\
+                    }   
+                     
+                    if (tally == 0)                  
+                    {                            
+                        textBox6.Text = "No Sensors Read";    //*   Display 'No Sensors Read' if no sensors are active   *\\  
+                    }                                                                                                           
+                    else                                        
+                    {                                                                                                            
+                        textBox6.Text = temp.ToString();     //*     Otherwise, display average temperature in GUI      *\\                            
+                    }  
+                }                                    
+            }
+        }                        
 
         // When pressed, the corresponding sensor will toggle from being on or off. 
         // This will determine which sensor values will be considered according to 
@@ -295,7 +273,6 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                 textBox1.BackColor = Color.Honeydew;
                 checkBox1.Text = "Active";
             }
-
             else 
             {
                 textBox1.BackColor = Color.MistyRose;
@@ -312,7 +289,6 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                 textBox2.BackColor = Color.Honeydew;
                 checkBox2.Text = "Active";
             }
-
             else
             {
                 textBox2.BackColor = Color.MistyRose;
@@ -329,7 +305,6 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                 textBox3.BackColor = Color.Honeydew;
                 checkBox3.Text = "Active";
             }
-
             else
             {
                 textBox3.BackColor = Color.MistyRose;
@@ -355,7 +330,6 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
             if (!double.IsNaN(temp))
                {
                 double error = temp - userTemp;
-                Console.Write(temp + " " + userTemp + " " + error);
 
                 if (error > High)
                    {
@@ -364,8 +338,6 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                     Console.WriteLine(temp);
                     GUISettings(true, textBox5, "Fan");
                     GUISettings(false, textBox4, "Heat");
-                    //  textBox5.Text = "Fan On"; textBox4.Text = "Heater Off"; 
-                    //textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.DarkSeaGreen;
                 }
                 else if (error < Low)
                 {
@@ -374,8 +346,6 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                     Console.WriteLine(temp);
                     GUISettings(false, textBox5, "Fan");
                     GUISettings(true, textBox4, "Heat");
-                    //  textBox5.Text = "Fan Off"; textBox4.Text = "Heater Off"; 
-                    //textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;
                 }
                 else 
                    {
@@ -383,8 +353,6 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                     Console.WriteLine(temp);
                     GUISettings(false, textBox5, "Fan");
                     GUISettings(false, textBox4, "Heat");
-                    //textBox5.Text = "Fan On"; textBox4.Text = "Heater On"; 
-                    //textBox4.BackColor = Color.DarkSeaGreen; textBox5.BackColor = Color.DarkSeaGreen;
                 }
 
                 if (!On)
@@ -392,12 +360,10 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
                     dOut.WriteData(0);
                     GUISettings(false, textBox5, "Fan");
                     GUISettings(false, textBox4, "Heat");
-                    //textBox5.Text = "Fan Off"; textBox4.Text = "Heater Off"; textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;
                 }
-
-               } 
-
+            } 
         }
+
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (!On)
@@ -417,13 +383,13 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
             {
                 if (On)
                 {
-                    MessageBox.Show("Fool, the controller is still on. Do you want me to get heatstroke?");
+                    MessageBox.Show("Fool, the controller is still on. Do you want me to get heatstroke?", "S.I.S.T.E.M: ", MessageBoxButtons.OK);
                     e.Cancel = true;
                 }
                 else
                 {
                     closingcount += 1;
-                    MessageBox.Show(func.ClosingForm1(reseting, closingcount));
+                    MessageBox.Show(func.ClosingForm1(reseting, closingcount), "S.I.S.T.E.M: ", MessageBoxButtons.OK);
                     if (reseting)
                     {
                         e.Cancel = true;
@@ -440,22 +406,13 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
         //fan on after turn off
         private void backgroundWorker3_DoWork(object sender, DoWorkEventArgs e)
         {
-            //*                                                                    *\\
-            //*                    Calculate current temperature                   *\\                                                                    *\\
-            Console.WriteLine("temp:" + temp + "> RT:" + roomTemp);                                                                                     //*                                                                    *\\
-                                                                                                                                                        //*                                                                    *\\
-            dOut.WriteData(0);
-            dOut.WriteData(1);                                                                                                                      //*                           Keep  fan on                             *\\
-            reseting = true;
-            GUISettings(true, textBox5, "Fan"); GUISettings(false, textBox4, "Heat");            //*                                                                    *\\
-                                                                                                 // textBox5.Text = "Fan On"; textBox4.Text = "Heater Off"; textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.DarkSeaGreen;  //*         Change GUI to reflect status of the fan and heater         *\\
-        }                                                                                                                                               //*                                                                    *\\
-                                                                                                                                                        //*                                                                    *\\                
-                                                                                                                                                        //*                                                                    *\\
-                                                                                                                                                        //Console.WriteLine("Heat & Fan Off");                                                                                                  //*                                                                    *\\
-         
+            dOut.WriteData(0); //*turn everything off*\\
+            dOut.WriteData(1);            //*                           Keep  fan on                             *\\
+            reseting = true; //* set resetting to true*\\
+            GUISettings(true, textBox5, "Fan"); GUISettings(false, textBox4, "Heat"); //* update GUI*\\
+        } 
         
-        //fan on after turn off
+        //cool down
         private void backgroundWorker3_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             temp = (func.CalcTemp(0, func.ReadTemperaturet(aIn0, coefficients, windowSize)) + 
@@ -467,9 +424,9 @@ The timer counter resets to 0 after 5 ticks to recount another period of 0.5 sec
             }
             else
             {
-                dOut.WriteData(0);                                                                                                                      //* When current temperature is below Room temperature, turn fan 'Off' *\\
-                GUISettings(false, textBox5, "Fan"); GUISettings(false, textBox4, "Heat");                                                                                                                                                                                                              // textBox4.BackColor = Color.Firebrick; textBox5.BackColor = Color.Firebrick;                                                             //*                                                                    *\\
-                reseting = false;
+                dOut.WriteData(0);                                //* When current temperature is below Room temperature, turn fan 'Off' *\\
+                GUISettings(false, textBox5, "Fan"); GUISettings(false, textBox4, "Heat"); //* update GUI*\\
+                reseting = false; //* set reset to false *\\
             }
         }
 

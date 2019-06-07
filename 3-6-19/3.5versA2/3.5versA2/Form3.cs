@@ -28,7 +28,7 @@ namespace _3._5versA2
             deviceNumber = textBox1.Text;
             if (deviceNumber == "")
             {
-                if(MessageBox.Show("Imbecile! You must enter the device number!", "Enter Device Number", MessageBoxButtons.RetryCancel) == DialogResult.Cancel)
+                if(MessageBox.Show("Imbecile! You must enter the device number!", "S.I.S.T.E.M:", MessageBoxButtons.RetryCancel) == DialogResult.Cancel)
                 {
 
                     deviceNumber = "Nothing";
@@ -45,7 +45,7 @@ namespace _3._5versA2
         {
             if (deviceNumber == "") {
                 
-                if(MessageBox.Show("Imbecile! You must enter the device number!","Enter Device Number", MessageBoxButtons.RetryCancel) == DialogResult.Retry)
+                if(MessageBox.Show("Imbecile! You must enter the device number!", "S.I.S.T.E.M:", MessageBoxButtons.RetryCancel) == DialogResult.Retry)
                 {
 
                     e.Cancel = true;
